@@ -6,240 +6,6 @@ October 18th, 2022
 -   [Question 1](#question-1)
 -   [Question 2](#question-2)
 
-``` r
-knitr::opts_chunk$set(fig.path='Figs/')
-```
-
-    ## Загрузка требуемого пакета: carData
-
-    ## 
-    ## Присоединяю пакет: 'dplyr'
-
-    ## Следующие объекты скрыты от 'package:dbplyr':
-    ## 
-    ##     ident, sql
-
-    ## Следующий объект скрыт от 'package:car':
-    ## 
-    ##     recode
-
-    ## Следующие объекты скрыты от 'package:stats':
-    ## 
-    ##     filter, lag
-
-    ## Следующие объекты скрыты от 'package:base':
-    ## 
-    ##     intersect, setdiff, setequal, union
-
-    ## 
-    ## Присоединяю пакет: 'EnvStats'
-
-    ## Следующий объект скрыт от 'package:car':
-    ## 
-    ##     qqPlot
-
-    ## Следующие объекты скрыты от 'package:stats':
-    ## 
-    ##     predict, predict.lm
-
-    ## Следующий объект скрыт от 'package:base':
-    ## 
-    ##     print.default
-
-    ## Загрузка требуемого пакета: ggplot2
-
-    ## Загрузка требуемого пакета: ggstance
-
-    ## 
-    ## Присоединяю пакет: 'ggstance'
-
-    ## Следующие объекты скрыты от 'package:ggplot2':
-    ## 
-    ##     GeomErrorbarh, geom_errorbarh
-
-    ## Загрузка требуемого пакета: scales
-
-    ## Загрузка требуемого пакета: ggridges
-
-    ## 
-    ## New to ggformula?  Try the tutorials: 
-    ##  learnr::run_tutorial("introduction", package = "ggformula")
-    ##  learnr::run_tutorial("refining", package = "ggformula")
-
-    ## 
-    ## Присоединяю пакет: 'lawstat'
-
-    ## Следующий объект скрыт от 'package:car':
-    ## 
-    ##     levene.test
-
-    ## Registered S3 method overwritten by 'mosaic':
-    ##   method                           from   
-    ##   fortify.SpatialPolygonsDataFrame ggplot2
-
-    ## 
-    ## The 'mosaic' package masks several functions from core packages in order to add 
-    ## additional features.  The original behavior of these functions should not be affected by this.
-
-    ## 
-    ## Присоединяю пакет: 'mosaic'
-
-    ## Следующий объект скрыт от 'package:Matrix':
-    ## 
-    ##     mean
-
-    ## Следующий объект скрыт от 'package:scales':
-    ## 
-    ##     rescale
-
-    ## Следующий объект скрыт от 'package:ggplot2':
-    ## 
-    ##     stat
-
-    ## Следующий объект скрыт от 'package:EnvStats':
-    ## 
-    ##     iqr
-
-    ## Следующие объекты скрыты от 'package:dplyr':
-    ## 
-    ##     count, do, tally
-
-    ## Следующие объекты скрыты от 'package:car':
-    ## 
-    ##     deltaMethod, logit
-
-    ## Следующие объекты скрыты от 'package:stats':
-    ## 
-    ##     IQR, binom.test, cor, cor.test, cov, fivenum, median, prop.test,
-    ##     quantile, sd, t.test, var
-
-    ## Следующие объекты скрыты от 'package:base':
-    ## 
-    ##     max, mean, min, prod, range, sample, sum
-
-    ## 
-    ## Присоединяю пакет: 'ggthemes'
-
-    ## Следующий объект скрыт от 'package:mosaic':
-    ## 
-    ##     theme_map
-
-    ## 
-    ## Присоединяю пакет: 'olsrr'
-
-    ## Следующий объект скрыт от 'package:datasets':
-    ## 
-    ##     rivers
-
-    ## ------------------------------------------------------------------------------
-
-    ## You have loaded plyr after dplyr - this is likely to cause problems.
-    ## If you need functions from both plyr and dplyr, please load plyr first, then dplyr:
-    ## library(plyr); library(dplyr)
-
-    ## ------------------------------------------------------------------------------
-
-    ## 
-    ## Присоединяю пакет: 'plyr'
-
-    ## Следующий объект скрыт от 'package:mosaic':
-    ## 
-    ##     count
-
-    ## Следующие объекты скрыты от 'package:dplyr':
-    ## 
-    ##     arrange, count, desc, failwith, id, mutate, rename, summarise,
-    ##     summarize
-
-    ## 
-    ## Присоединяю пакет: 'purrr'
-
-    ## Следующий объект скрыт от 'package:plyr':
-    ## 
-    ##     compact
-
-    ## Следующий объект скрыт от 'package:mosaic':
-    ## 
-    ##     cross
-
-    ## Следующий объект скрыт от 'package:scales':
-    ## 
-    ##     discard
-
-    ## Следующий объект скрыт от 'package:car':
-    ## 
-    ##     some
-
-    ## 
-    ## Присоединяю пакет: 'plotly'
-
-    ## Следующие объекты скрыты от 'package:plyr':
-    ## 
-    ##     arrange, mutate, rename, summarise
-
-    ## Следующий объект скрыт от 'package:mosaic':
-    ## 
-    ##     do
-
-    ## Следующий объект скрыт от 'package:ggplot2':
-    ## 
-    ##     last_plot
-
-    ## Следующий объект скрыт от 'package:stats':
-    ## 
-    ##     filter
-
-    ## Следующий объект скрыт от 'package:graphics':
-    ## 
-    ##     layout
-
-    ## 
-    ## Присоединяю пакет: 'resampledata'
-
-    ## Следующий объект скрыт от 'package:carData':
-    ## 
-    ##     Salaries
-
-    ## Следующий объект скрыт от 'package:datasets':
-    ## 
-    ##     Titanic
-
-    ## 
-    ## Присоединяю пакет: 'SDaA'
-
-    ## Следующий объект скрыт от 'package:plyr':
-    ## 
-    ##     ozone
-
-    ## Следующий объект скрыт от 'package:ggplot2':
-    ## 
-    ##     seals
-
-    ## 
-    ## Присоединяю пакет: 'tidyr'
-
-    ## Следующие объекты скрыты от 'package:Matrix':
-    ## 
-    ##     expand, pack, unpack
-
-    ## 
-    ## Присоединяю пакет: 'cowplot'
-
-    ## Следующий объект скрыт от 'package:ggthemes':
-    ## 
-    ##     theme_map
-
-    ## Следующий объект скрыт от 'package:mosaic':
-    ## 
-    ##     theme_map
-
-    ## 
-    ## Присоединяю пакет: 'reshape2'
-
-    ## Следующий объект скрыт от 'package:tidyr':
-    ## 
-    ##     smiths
-
 ## Question 1
 
 There are a number of reasons why to not work with the original
@@ -256,7 +22,7 @@ ln(p1/p0))
 
 ``` r
 # Read SP500 index data 
-df_index <- read.csv("/Users/berg/DataspellProjects/MDSA-UofC/DATA602/00_project/data/sp500_index_602_v2.csv")
+df_index <- read.csv("sp500_index_602_v2.csv")
 # Peek at data
 print(colSums(is.na(df_index)))
 ```
@@ -586,14 +352,13 @@ tail, which makes extreme negative returns more likely than under the
 t-model. Second, the t-model assumes constant conditional volatility,
 but volatility was usually high in March 2020 (see plot returns).
 
-##################################################################################################################################################### 
 
 ## Question 2
 
 ``` r
 # Read SP500 index data 
-df_stock_returns <- read.csv("/Users/berg/DataspellProjects/MDSA-UofC/DATA602/00_project/data/sp500_stocks_returns_602.csv")
-df_stock_cum_returns <- read.csv("/Users/berg/DataspellProjects/MDSA-UofC/DATA602/00_project/data/sp500_stocks_cumreturns_602.csv")
+df_stock_returns <- read.csv("sp500_stocks_returns_602.csv")
+df_stock_cum_returns <- read.csv("sp500_stocks_cumreturns_602.csv")
 ```
 
 ``` r
@@ -1013,7 +778,7 @@ ggsave(file="spread.png", width=10, height=7, dpi=300)
 New unseen by model data
 
 ``` r
-pepco_test <- na.omit(read.csv("/Users/berg/DataspellProjects/MDSA-UofC/DATA602/00_project/data/pepco_returns.csv"))
+pepco_test <- na.omit(read.csv("pepco_returns.csv"))
 ```
 
 ``` r
@@ -1071,46 +836,3 @@ plot_grid(x, ncol = 1, nrow = 1)
 ``` r
 ggsave(file="goodfit.png", width=7, height=7, dpi=300)
 ```
-
-------------------------------------------------------------------------
-
-Quantile–quantile plots are useful not only for comparing a sample with
-a theoretical model, as above, but also for comparing two samples. If
-the two samples have the same sizes, then one need only plot their order
-statistics against each other. Otherwise, one computes the same sets of
-sample quantiles for each and plots them. This is done automatically
-with the R command qqplot.
-
-a sample is a good representative of the population, and we can simulate
-sampling from the population by sampling from the sample, which is
-called resampling. Why with replacement? The reason is that only
-sampling with replacement gives independent observations, and we want
-the resamples to be i.i.d. just as the original sample. In fact, if the
-resamples were drawn without replacement, then every resample would be
-exactly the same as the original sample, so the resamples would show no
-random variation. This would not be very satisfactory, of course.
-
-Suppose one wants to test the null hypothesis that the two populations
-have the same means against a two-sided alternative. The transformed
-data satisfy the assumptions of the t-test that the two populations are
-normally distributed with the same variance, but of course the original
-data do not meet these assumptions. Two-sided independent-samples
-t-tests have p-values of 0.105 and 0.00467 using the original data and
-the log-transformed data, respectively. These two p-values lead to
-rather different conclusions, for the first test that the means are not
-significantly different and for the second test that the difference is
-highly significant. The first test reaches an incorrect conclusion
-because its assumptions are not met.
-
-The previous example illustrates some general principles to keep in
-mind. All statistical estimators and tests make certain assumptions
-about the dis- tribution of the data. One should check these
-assumptions, and graphical methods are often the most convenient way to
-diagnose problems. If the as- sumptions are not met, then one needs to
-know how sensitive the estimator or test is to violations of the
-assumptions. If the estimator or test is likely to be seriously degraded
-by violations of the assumption, which is called nonro- bustness, then
-there are two recourses. The first is to find a new estimator or test
-that is suitable for the data. The second is to transform the data so
-that the transformed data satisfy the assumptions of the original test
-or estimator.
