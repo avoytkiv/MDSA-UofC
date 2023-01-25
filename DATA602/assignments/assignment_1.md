@@ -122,8 +122,8 @@ head(simresult,2)
 ```
 
     ##   outcome
-    ## 1       1
-    ## 2       3
+    ## 1       5
+    ## 2       2
 
 ### Step 3
 
@@ -144,7 +144,9 @@ ggplot(data=simresult, aes(x = outcome)) +
   ggtitle("Frequency Histogram of 1000 simulated Coin Tosses")
 ```
 
-![](Figs/unnamed-chunk-7-1.png)<!-- --> \#\#\# Step 4
+![](Figs/unnamed-chunk-7-1.png)<!-- -->
+
+### Step 4
 
 ``` r
 nsims = 3000
@@ -185,7 +187,7 @@ p_sum14 = dim(simresult[simresult$total >= 14, ])[1] / dim(simresult)[1] # calcu
 p_sum14
 ```
 
-    ## [1] 0.1636667
+    ## [1] 0.157
 
 ## Problem 3
 
@@ -314,8 +316,11 @@ of this particular random variable X.For values of x, use xvalues =
 plot(xvalues, px, type="h", col="blue")
 ```
 
-![](Figs/unnamed-chunk-15-1.png)<!-- --> \#\#\# B How likely is it to
-observe values beyond 3? Compute.
+![](Figs/unnamed-chunk-15-1.png)<!-- -->
+
+### B
+
+How likely is it to observe values beyond 3? Compute.
 
 **Answer**
 
@@ -730,8 +735,9 @@ ggplot(data=sub_gss_A, aes(x = Education, fill=Race)) +
   geom_bar(position = "dodge", na.rm=TRUE) 
 ```
 
-![](Figs/unnamed-chunk-34-1.png)<!-- --> From this visualization
-(straightforward approach) it is not clear.
+![](Figs/unnamed-chunk-34-1.png)<!-- -->
+
+From this visualization (straightforward approach) it is not clear.
 
 ``` r
 sub_gss_A = na.omit(gss[,c("Education","Race")]) # select columns and remove NAs 
@@ -766,7 +772,9 @@ ggplot(data.frame(reliprop_row),
     ylab("Proportion")
 ```
 
-![](Figs/unnamed-chunk-35-2.png)<!-- --> **Answer**
+![](Figs/unnamed-chunk-35-2.png)<!-- -->
+
+**Answer**
 
 From this bar plot it is much more clear. 1. Regarding the black race,
 *a quarter* of them leave High School, and *slightly more than half*
@@ -798,7 +806,9 @@ ggplot(data.frame(reliprop_row),
     ylab("Proportion")
 ```
 
-![](Figs/unnamed-chunk-36-1.png)<!-- --> **Answer**
+![](Figs/unnamed-chunk-36-1.png)<!-- -->
+
+**Answer**
 
 1.  Among those with marital status Widowed, they *rarely get higher
     education* (bachelor + graduate). Approximately *half of them finish
@@ -844,7 +854,9 @@ ggplot(data.frame(reliprop_col),
     ylab("Proportion") + coord_flip()
 ```
 
-![](Figs/unnamed-chunk-37-2.png)<!-- --> **Answer**
+![](Figs/unnamed-chunk-37-2.png)<!-- -->
+
+**Answer**
 
 There are *no distinguishable differences* between Males and Females
 respective to Political views, *except Extremely Conservative*, where
