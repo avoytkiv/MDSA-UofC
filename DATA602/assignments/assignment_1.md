@@ -2,48 +2,20 @@ Assignment 1
 ================
 
 -   [Problem 1](#problem-1)
-    -   [A](#a)
-    -   [B](#b)
-    -   [C](#c)
-    -   [D](#d)
 -   [Problem 2](#problem-2)
-    -   [Step 1,2](#step-12)
-    -   [Step 3](#step-3)
-    -   [Question for Problem 2](#question-for-problem-2)
 -   [Problem 3](#problem-3)
-    -   [A](#a-1)
-    -   [B](#b-1)
-    -   [C](#c-1)
 -   [Problem 4](#problem-4)
 -   [Problem 5](#problem-5)
-    -   [A](#a-2)
-    -   [C](#c-2)
-    -   [D](#d-1)
-    -   [E](#e)
 -   [Problem 6](#problem-6)
-    -   [A](#a-3)
-    -   [B](#b-2)
-    -   [C](#c-3)
 -   [Problem 7](#problem-7)
 -   [Problem 8](#problem-8)
-    -   [A](#a-4)
-    -   [B](#b-3)
-    -   [C](#c-4)
-    -   [D](#d-2)
 -   [Problem 9](#problem-9)
-    -   [Load data](#load-data)
-    -   [A Brief Tutorial on Bar
-        Graphs](#a-brief-tutorial-on-bar-graphs)
-    -   [A](#a-5)
-    -   [B](#b-4)
-    -   [C](#c-5)
 -   [Problem 10](#problem-10)
-    -   [A](#a-6)
-    -   [B](#b-5)
 -   [Problem 11](#problem-11)
-    -   [A](#a-7)
-    -   [B](#b-6)
-    -   [C](#c-6)
+
+``` r
+knitr::opts_chunk$set(fig.path='Figs/')
+```
 
 ## Problem 1
 
@@ -150,8 +122,8 @@ head(simresult,2)
 ```
 
     ##   outcome
-    ## 1       2
-    ## 2       4
+    ## 1       1
+    ## 2       3
 
 ### Step 3
 
@@ -172,8 +144,7 @@ ggplot(data=simresult, aes(x = outcome)) +
   ggtitle("Frequency Histogram of 1000 simulated Coin Tosses")
 ```
 
-![](/Users/berg/DataspellProjects/MDSA-UofC/DATA602/assignments/assignment_1_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
-\#\#\# Step 4
+![](Figs/unnamed-chunk-7-1.png)<!-- --> \#\#\# Step 4
 
 ``` r
 nsims = 3000
@@ -214,7 +185,7 @@ p_sum14 = dim(simresult[simresult$total >= 14, ])[1] / dim(simresult)[1] # calcu
 p_sum14
 ```
 
-    ## [1] 0.163
+    ## [1] 0.1636667
 
 ## Problem 3
 
@@ -343,8 +314,8 @@ of this particular random variable X.For values of x, use xvalues =
 plot(xvalues, px, type="h", col="blue")
 ```
 
-![](/Users/berg/DataspellProjects/MDSA-UofC/DATA602/assignments/assignment_1_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
-\#\#\# B How likely is it to observe values beyond 3? Compute.
+![](Figs/unnamed-chunk-15-1.png)<!-- --> \#\#\# B How likely is it to
+observe values beyond 3? Compute.
 
 **Answer**
 
@@ -700,7 +671,7 @@ ggplot(data=gss, aes(x = Religion, fill=Religion)) +
         axis.ticks.x=element_blank())
 ```
 
-![](/Users/berg/DataspellProjects/MDSA-UofC/DATA602/assignments/assignment_1_files/figure-gfm/unnamed-chunk-33-1.png)<!-- -->
+![](Figs/unnamed-chunk-33-1.png)<!-- -->
 
 ``` r
 counts = as.data.frame(sort(table(gss$Religion)))
@@ -730,7 +701,7 @@ ggplot(data=counts, aes(x=Var1, y=Freq, fill=Var1)) +
         axis.ticks.x=element_blank())
 ```
 
-![](/Users/berg/DataspellProjects/MDSA-UofC/DATA602/assignments/assignment_1_files/figure-gfm/unnamed-chunk-33-2.png)<!-- -->
+![](Figs/unnamed-chunk-33-2.png)<!-- -->
 
 ``` r
 reliprop = counts$Freq/sum(counts$Freq) #converts counts to proportions
@@ -745,7 +716,7 @@ ggplot(data=counts1, aes(x=Var1, y=reliprop, fill=Var1)) +
         axis.ticks.x=element_blank())
 ```
 
-![](/Users/berg/DataspellProjects/MDSA-UofC/DATA602/assignments/assignment_1_files/figure-gfm/unnamed-chunk-33-3.png)<!-- -->
+![](Figs/unnamed-chunk-33-3.png)<!-- -->
 
 ### A
 
@@ -759,8 +730,8 @@ ggplot(data=sub_gss_A, aes(x = Education, fill=Race)) +
   geom_bar(position = "dodge", na.rm=TRUE) 
 ```
 
-![](/Users/berg/DataspellProjects/MDSA-UofC/DATA602/assignments/assignment_1_files/figure-gfm/unnamed-chunk-34-1.png)<!-- -->
-From this visualization (straightforward approach) it is not clear.
+![](Figs/unnamed-chunk-34-1.png)<!-- --> From this visualization
+(straightforward approach) it is not clear.
 
 ``` r
 sub_gss_A = na.omit(gss[,c("Education","Race")]) # select columns and remove NAs 
@@ -782,7 +753,7 @@ ggplot(data.frame(reliprop_col),
     ylab("Proportion")
 ```
 
-![](/Users/berg/DataspellProjects/MDSA-UofC/DATA602/assignments/assignment_1_files/figure-gfm/unnamed-chunk-35-1.png)<!-- -->
+![](Figs/unnamed-chunk-35-1.png)<!-- -->
 
 ``` r
 ggplot(data.frame(reliprop_row), 
@@ -795,8 +766,7 @@ ggplot(data.frame(reliprop_row),
     ylab("Proportion")
 ```
 
-![](/Users/berg/DataspellProjects/MDSA-UofC/DATA602/assignments/assignment_1_files/figure-gfm/unnamed-chunk-35-2.png)<!-- -->
-**Answer**
+![](Figs/unnamed-chunk-35-2.png)<!-- --> **Answer**
 
 From this bar plot it is much more clear. 1. Regarding the black race,
 *a quarter* of them leave High School, and *slightly more than half*
@@ -828,8 +798,7 @@ ggplot(data.frame(reliprop_row),
     ylab("Proportion")
 ```
 
-![](/Users/berg/DataspellProjects/MDSA-UofC/DATA602/assignments/assignment_1_files/figure-gfm/unnamed-chunk-36-1.png)<!-- -->
-**Answer**
+![](Figs/unnamed-chunk-36-1.png)<!-- --> **Answer**
 
 1.  Among those with marital status Widowed, they *rarely get higher
     education* (bachelor + graduate). Approximately *half of them finish
@@ -863,7 +832,7 @@ ggplot(data.frame(reliprop_row),
     ylab("Proportion")
 ```
 
-![](/Users/berg/DataspellProjects/MDSA-UofC/DATA602/assignments/assignment_1_files/figure-gfm/unnamed-chunk-37-1.png)<!-- -->
+![](Figs/unnamed-chunk-37-1.png)<!-- -->
 
 ``` r
 ggplot(data.frame(reliprop_col), 
@@ -875,8 +844,7 @@ ggplot(data.frame(reliprop_col),
     ylab("Proportion") + coord_flip()
 ```
 
-![](/Users/berg/DataspellProjects/MDSA-UofC/DATA602/assignments/assignment_1_files/figure-gfm/unnamed-chunk-37-2.png)<!-- -->
-**Answer**
+![](Figs/unnamed-chunk-37-2.png)<!-- --> **Answer**
 
 There are *no distinguishable differences* between Males and Females
 respective to Political views, *except Extremely Conservative*, where
@@ -920,7 +888,7 @@ geom_smooth(method="lm")
 
     ## `geom_smooth()` using formula 'y ~ x'
 
-![](/Users/berg/DataspellProjects/MDSA-UofC/DATA602/assignments/assignment_1_files/figure-gfm/unnamed-chunk-39-1.png)<!-- -->
+![](Figs/unnamed-chunk-39-1.png)<!-- -->
 
 ### B
 
@@ -934,10 +902,9 @@ ylab("Balance") +
 ggtitle("Boxplots of distributions of balance owing between students and non-students")  
 ```
 
-![](/Users/berg/DataspellProjects/MDSA-UofC/DATA602/assignments/assignment_1_files/figure-gfm/unnamed-chunk-40-1.png)<!-- -->
-\#\#\# C Compute the means, medians, standard deviations, x5, x95 (the
-5th and 95th percentiles, respectively) for the data you visually
-summarized in part (b).
+![](Figs/unnamed-chunk-40-1.png)<!-- --> \#\#\# C Compute the means,
+medians, standard deviations, x5, x95 (the 5th and 95th percentiles,
+respectively) for the data you visually summarized in part (b).
 
 **Answer**
 
@@ -1048,7 +1015,7 @@ ylab("") +
 ggtitle("")
 ```
 
-![](/Users/berg/DataspellProjects/MDSA-UofC/DATA602/assignments/assignment_1_files/figure-gfm/unnamed-chunk-43-1.png)<!-- -->
+![](Figs/unnamed-chunk-43-1.png)<!-- -->
 
 ### B
 

@@ -6,6 +6,9 @@ output:
         toc: true
         toc_depth: 2
 ---
+```{r global_options}
+knitr::opts_chunk$set(fig.path='Figs/')
+```
 ## Problem 1
 A recent study1 of college graduates in the United states discovered that approximately 60% of degree holders would “change their majors if they could go back to school” and re-do their undergraduate degree. Let’s presume this proportion also holds for Canadian undergraduate university degree holders.
 
