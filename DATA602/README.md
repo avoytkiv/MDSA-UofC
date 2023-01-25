@@ -9,12 +9,12 @@ An introduction to the foundations of statistical inference including probabilit
 - sample mean, sample proportion, and sample variance; 
 - Bootstrap statistics.
 
-[Assignment3](01_assignment/solutions.md): 
+[Assignment3](03_assignment/solutions.md): 
 - Pivotal Quantity Confidence Intervals; 
 - Two Sample Problems: Bootstrap and Pivotal Quantity confidence interval estimate for a function of two population parameters; 
 - Hypothesis Testing Concerning one-population parameter.
 
-[Assignment4](01_assignment/solution.md): 
+[Assignment4](04_assignment/solution.md): 
 - Hypothesis Testing Concerning two-population parameters;
   - permutation tests, 
   - t-test concerning two population means (t.test..), 
