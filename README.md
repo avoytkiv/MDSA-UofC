@@ -1,4 +1,4 @@
-# Master of Data Science and Analytics 
+# Master of Data Science and Analytics program
 ### at the University of Calgary
 
 List of courses:
