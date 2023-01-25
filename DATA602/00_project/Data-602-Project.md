@@ -10,6 +10,236 @@ October 18th, 2022
 knitr::opts_chunk$set(fig.path='Figs/')
 ```
 
+    ## Загрузка требуемого пакета: carData
+
+    ## 
+    ## Присоединяю пакет: 'dplyr'
+
+    ## Следующие объекты скрыты от 'package:dbplyr':
+    ## 
+    ##     ident, sql
+
+    ## Следующий объект скрыт от 'package:car':
+    ## 
+    ##     recode
+
+    ## Следующие объекты скрыты от 'package:stats':
+    ## 
+    ##     filter, lag
+
+    ## Следующие объекты скрыты от 'package:base':
+    ## 
+    ##     intersect, setdiff, setequal, union
+
+    ## 
+    ## Присоединяю пакет: 'EnvStats'
+
+    ## Следующий объект скрыт от 'package:car':
+    ## 
+    ##     qqPlot
+
+    ## Следующие объекты скрыты от 'package:stats':
+    ## 
+    ##     predict, predict.lm
+
+    ## Следующий объект скрыт от 'package:base':
+    ## 
+    ##     print.default
+
+    ## Загрузка требуемого пакета: ggplot2
+
+    ## Загрузка требуемого пакета: ggstance
+
+    ## 
+    ## Присоединяю пакет: 'ggstance'
+
+    ## Следующие объекты скрыты от 'package:ggplot2':
+    ## 
+    ##     GeomErrorbarh, geom_errorbarh
+
+    ## Загрузка требуемого пакета: scales
+
+    ## Загрузка требуемого пакета: ggridges
+
+    ## 
+    ## New to ggformula?  Try the tutorials: 
+    ##  learnr::run_tutorial("introduction", package = "ggformula")
+    ##  learnr::run_tutorial("refining", package = "ggformula")
+
+    ## 
+    ## Присоединяю пакет: 'lawstat'
+
+    ## Следующий объект скрыт от 'package:car':
+    ## 
+    ##     levene.test
+
+    ## Registered S3 method overwritten by 'mosaic':
+    ##   method                           from   
+    ##   fortify.SpatialPolygonsDataFrame ggplot2
+
+    ## 
+    ## The 'mosaic' package masks several functions from core packages in order to add 
+    ## additional features.  The original behavior of these functions should not be affected by this.
+
+    ## 
+    ## Присоединяю пакет: 'mosaic'
+
+    ## Следующий объект скрыт от 'package:Matrix':
+    ## 
+    ##     mean
+
+    ## Следующий объект скрыт от 'package:scales':
+    ## 
+    ##     rescale
+
+    ## Следующий объект скрыт от 'package:ggplot2':
+    ## 
+    ##     stat
+
+    ## Следующий объект скрыт от 'package:EnvStats':
+    ## 
+    ##     iqr
+
+    ## Следующие объекты скрыты от 'package:dplyr':
+    ## 
+    ##     count, do, tally
+
+    ## Следующие объекты скрыты от 'package:car':
+    ## 
+    ##     deltaMethod, logit
+
+    ## Следующие объекты скрыты от 'package:stats':
+    ## 
+    ##     IQR, binom.test, cor, cor.test, cov, fivenum, median, prop.test,
+    ##     quantile, sd, t.test, var
+
+    ## Следующие объекты скрыты от 'package:base':
+    ## 
+    ##     max, mean, min, prod, range, sample, sum
+
+    ## 
+    ## Присоединяю пакет: 'ggthemes'
+
+    ## Следующий объект скрыт от 'package:mosaic':
+    ## 
+    ##     theme_map
+
+    ## 
+    ## Присоединяю пакет: 'olsrr'
+
+    ## Следующий объект скрыт от 'package:datasets':
+    ## 
+    ##     rivers
+
+    ## ------------------------------------------------------------------------------
+
+    ## You have loaded plyr after dplyr - this is likely to cause problems.
+    ## If you need functions from both plyr and dplyr, please load plyr first, then dplyr:
+    ## library(plyr); library(dplyr)
+
+    ## ------------------------------------------------------------------------------
+
+    ## 
+    ## Присоединяю пакет: 'plyr'
+
+    ## Следующий объект скрыт от 'package:mosaic':
+    ## 
+    ##     count
+
+    ## Следующие объекты скрыты от 'package:dplyr':
+    ## 
+    ##     arrange, count, desc, failwith, id, mutate, rename, summarise,
+    ##     summarize
+
+    ## 
+    ## Присоединяю пакет: 'purrr'
+
+    ## Следующий объект скрыт от 'package:plyr':
+    ## 
+    ##     compact
+
+    ## Следующий объект скрыт от 'package:mosaic':
+    ## 
+    ##     cross
+
+    ## Следующий объект скрыт от 'package:scales':
+    ## 
+    ##     discard
+
+    ## Следующий объект скрыт от 'package:car':
+    ## 
+    ##     some
+
+    ## 
+    ## Присоединяю пакет: 'plotly'
+
+    ## Следующие объекты скрыты от 'package:plyr':
+    ## 
+    ##     arrange, mutate, rename, summarise
+
+    ## Следующий объект скрыт от 'package:mosaic':
+    ## 
+    ##     do
+
+    ## Следующий объект скрыт от 'package:ggplot2':
+    ## 
+    ##     last_plot
+
+    ## Следующий объект скрыт от 'package:stats':
+    ## 
+    ##     filter
+
+    ## Следующий объект скрыт от 'package:graphics':
+    ## 
+    ##     layout
+
+    ## 
+    ## Присоединяю пакет: 'resampledata'
+
+    ## Следующий объект скрыт от 'package:carData':
+    ## 
+    ##     Salaries
+
+    ## Следующий объект скрыт от 'package:datasets':
+    ## 
+    ##     Titanic
+
+    ## 
+    ## Присоединяю пакет: 'SDaA'
+
+    ## Следующий объект скрыт от 'package:plyr':
+    ## 
+    ##     ozone
+
+    ## Следующий объект скрыт от 'package:ggplot2':
+    ## 
+    ##     seals
+
+    ## 
+    ## Присоединяю пакет: 'tidyr'
+
+    ## Следующие объекты скрыты от 'package:Matrix':
+    ## 
+    ##     expand, pack, unpack
+
+    ## 
+    ## Присоединяю пакет: 'cowplot'
+
+    ## Следующий объект скрыт от 'package:ggthemes':
+    ## 
+    ##     theme_map
+
+    ## Следующий объект скрыт от 'package:mosaic':
+    ## 
+    ##     theme_map
+
+    ## 
+    ## Присоединяю пакет: 'reshape2'
+
+    ## Следующий объект скрыт от 'package:tidyr':
+    ## 
+    ##     smiths
+
 ## Question 1
 
 There are a number of reasons why to not work with the original
@@ -26,7 +256,7 @@ ln(p1/p0))
 
 ``` r
 # Read SP500 index data 
-df_index <- read.csv("sp500_index_602_v2.csv")
+df_index <- read.csv("/Users/berg/DataspellProjects/MDSA-UofC/DATA602/00_project/data/sp500_index_602_v2.csv")
 # Peek at data
 print(colSums(is.na(df_index)))
 ```
@@ -362,8 +592,8 @@ but volatility was usually high in March 2020 (see plot returns).
 
 ``` r
 # Read SP500 index data 
-df_stock_returns <- read.csv("sp500_stocks_returns_602.csv")
-df_stock_cum_returns <- read.csv("sp500_stocks_cumreturns_602.csv")
+df_stock_returns <- read.csv("/Users/berg/DataspellProjects/MDSA-UofC/DATA602/00_project/data/sp500_stocks_returns_602.csv")
+df_stock_cum_returns <- read.csv("/Users/berg/DataspellProjects/MDSA-UofC/DATA602/00_project/data/sp500_stocks_cumreturns_602.csv")
 ```
 
 ``` r
@@ -524,7 +754,7 @@ qdata(~diff_mean, c(0.025, 0.975), data=boot_df)
 ```
 
     ##          2.5%         97.5% 
-    ## -0.0006097918  0.0004898093
+    ## -0.0005951095  0.0004592381
 
 t-test
 
@@ -569,7 +799,7 @@ qdata(~division_sd, c(0.025, 0.975), data=boot_df)
 ```
 
     ##      2.5%     97.5% 
-    ## 0.9171884 1.1189198
+    ## 0.9154703 1.1281138
 
 ### Linear regression
 
@@ -749,7 +979,7 @@ qdata(~cor, c(0.025, 0.975), data=boot_df)
 ```
 
     ##      2.5%     97.5% 
-    ## 0.6714677 0.7461767
+    ## 0.6705853 0.7478281
 
 From this data, we are 95% confident, that the true value of correlation
 is between 0.67 and 0.74.
@@ -783,7 +1013,7 @@ ggsave(file="spread.png", width=10, height=7, dpi=300)
 New unseen by model data
 
 ``` r
-pepco_test <- na.omit(read.csv("pepco_returns.csv"))
+pepco_test <- na.omit(read.csv("/Users/berg/DataspellProjects/MDSA-UofC/DATA602/00_project/data/pepco_returns.csv"))
 ```
 
 ``` r
