@@ -1,0 +1,13 @@
+ENGINEER	JOB	COST
+Eng1	Job1	4.6
+Eng1	Job2	6.2
+Eng1	Job3	5.0
+Eng1	Job4	6.6
+Eng2	Job1	4.9
+Eng2	Job2	6.3
+Eng2	Job3	5.4
+Eng2	Job4	6.8
+Eng3	Job1	4.4
+Eng3	Job2	5.9
+Eng3	Job3	5.4
+Eng3	Job4	6.3

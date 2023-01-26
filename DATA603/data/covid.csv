@@ -1,0 +1,13 @@
+AgeGroup,Treat,Time
+18-35,Placebo,10
+36-45,Placebo,11
+46-55,Placebo,20
+56+,Placebo,28
+18-35,TreatA,9
+36-45,TreatA,8
+46-55,TreatA,14
+56+,TreatA,20
+18-35,TreatB,8
+36-45,TreatB,5
+46-55,TreatB,9
+56+,TreatB,15
