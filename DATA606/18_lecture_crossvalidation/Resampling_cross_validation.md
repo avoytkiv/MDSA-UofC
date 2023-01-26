@@ -204,9 +204,9 @@ cv_result<-data.frame(cv_error, poly=seq(1,5,by=1))
 ggplot()+geom_line(data = cv_result, aes(poly, cv_error), colour='red')+geom_point(data = cv_result, aes(poly, cv_error), colour='black')
 ```
 
-![](Figs/unnamed-chunk-12-1.png)<!-- --> From the LOOCV results, combing
-with the interpretability of the model, I would chooise the quadratic
-regression model.
+![](Figs/LOOCV-1.png)<!-- --> From the LOOCV results, combing with the
+interpretability of the model, I would chooise the quadratic regression
+model.
 
 ![\\\\\[0.2in\]](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5C%5C%5B0.2in%5D "\\[0.2in]")
 
@@ -241,7 +241,7 @@ CV_result<-data.frame(CV_error1, CV_error2, poly=seq(1,5,by=1))
 ggplot()+geom_line(data = CV_result, aes(poly, CV_error1), colour='red')+geom_line(data = CV_result, aes(poly, CV_error2), colour='blue')+geom_point(data = CV_result, aes(poly, CV_error1), colour='black')+geom_point(data = CV_result, aes(poly, CV_error2), colour='black')
 ```
 
-![](Figs/unnamed-chunk-13-1.png)<!-- -->
+![](Figs/k-fold-1.png)<!-- -->
 
 The result presented above is consistent with the LOOCV result.
 
