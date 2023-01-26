@@ -40,4 +40,4 @@ An introduction to the creation of complex statistical models, including exposur
   - Log-transformation
   - Box-Cox transformation
   
-  [Project](DATA_603_final_project.md)
+[Project](DATA_603_final_project.md)
