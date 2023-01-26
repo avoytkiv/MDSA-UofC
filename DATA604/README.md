@@ -10,4 +10,4 @@ An introduction to core database concepts with a variety of underlying data mode
 [Assignment3](Assignment-3.ipynb): 
 
   
-[Project](DATA_603_final_project.md)
+[Project](Project.ipynb)
