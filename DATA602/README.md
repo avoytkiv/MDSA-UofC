@@ -2,7 +2,10 @@
 An introduction to the foundations of statistical inference including probability models for data analysis, classical and simulation-based statistical inference, and implementation of statistical models with R.
 
 [Probability exercises](00_probability_exercises/README.md):
-- [problems](00_probability_exercises/problems/ProbExSet1.pdf) | [solutions](00_probability_exercises/ProbExSet1.ipynb)
+- Set operations ([problems](00_probability_exercises/problems/ProbExSet1.pdf) | [solutions](00_probability_exercises/ProbExSet1.ipynb))
+- Conditional probability, dependent/independent events ([problems](00_probability_exercises/problems/ProbExSet2.pdf) | [solutions](00_probability_exercises/ProbExSet2.ipynb))
+- Discrete Random Variables; Binomial and Poisson probability models ([problems](00_probability_exercises/problems/ProbExSet3.pdf) | [solutions](00_probability_exercises/ProbExSet3.ipynb))
+- Continuous Random Variables; Normal, Exponential, Gamma and Chi-square distributions ([problems](00_probability_exercises/problems/ProbExSet4.pdf) | [solutions](00_probability_exercises/ProbExSet4.ipynb))
 
 [Assignment1](01_assignment/solution.md): 
 - probability theory; 
