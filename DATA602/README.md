@@ -21,3 +21,5 @@ An introduction to the foundations of statistical inference including probabilit
   - z-test concerning the equality of two population proportions (prop.test..);
 - testing 'statistical independence' between two categorical variables through the chi-squared test
   - contingency table of counts.  
+  
+[Project](Data-602-Project.md)
