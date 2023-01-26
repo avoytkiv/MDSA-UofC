@@ -15,7 +15,7 @@ knitr::opts_chunk$set(fig.path='Figs/')
 ## Problem 1
 
 ``` r
-tires = read.csv("tires.csv")
+tires = read.csv("/Users/berg/DataspellProjects/MDSA-UofC/DATA603/data/tires.csv")
 ```
 
 ### Part A
@@ -169,7 +169,7 @@ cat("The average tread wear per 160 km is", wear_predicted,  "in the percentage 
 ## Problem 2
 
 ``` r
-health = read.csv("MentalHealth.csv")
+health = read.csv("/Users/berg/DataspellProjects/MDSA-UofC/DATA603/data/MentalHealth.csv")
 ```
 
 ### Part A
@@ -825,7 +825,7 @@ That is the proportion 97.9% of the total variation in response variable
 ## Problem 4
 
 ``` r
-kbi = read.csv("KBI.csv")
+kbi = read.csv("/Users/berg/DataspellProjects/MDSA-UofC/DATA603/data/KBI.csv")
 colnames(kbi)
 ```
 
