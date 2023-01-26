@@ -14,6 +14,7 @@ knitr::opts_chunk$set(fig.path='Figs/')
 ```
 
 ## Question 1
+Read the dataset in R. Check the names of the variables and dimension of the dataset. (2pt)
 
 ``` r
 # Read the dataset
@@ -37,6 +38,7 @@ colnames(data)
     ## [13] "usd.pledged"      "usd_pledged_real" "usd_goal_real"
 
 ## Question 2
+Suppose you are interested in the variable “usd_pledged_real”. Please use a simple random sample with size 5000 and estimate the population average and its standard deviation. (6pt)
 
 ``` r
 # Simple random sample of 5000 observations
@@ -132,6 +134,8 @@ of the sample mean is plotted above. The red line indicates the
 population mean.
 
 ## Question 3
+With the same interested variable as in Q2, please use each “main_category” as the stratum and the proportional allocation principle to get a stratified sample with size around
+5000 (round the number of sampled units in each stratum to the nearest integer). Estimate the population average and its standard deviation. (6pt)
 
 ``` r
 # Calculate proportion of each category and make a data frame
@@ -191,6 +195,7 @@ survey package estimates the population mean to be 9889 USD. We can be
 USD and 12911 USD.
 
 ## Question 4
+If the clusters are defined by “country”. With the same interested variable as in Q2, please use one-stage cluster sampling to select TWO clusters. Estimate the population average and its standard deviation. (6pt)
 
 ``` r
 # Calculate the number of unique clusters in the data
@@ -255,6 +260,9 @@ deviation 2985.4. We can be 95% confident that the true population mean
 is in the range between 0 USD and 42,448 USD.
 
 ## Question 5
+Suppose you are interested in the ratio between the actual amount of funding pledged and the goal amount of funding. (1) Please use the simple random sample you get from Q2 to estimate this ratio and its standard deviation. (2) Suppose you have three projects to launch and your goal amounts for these projects are 500k,1000k
+and 2000k
+usd dollars. Please estimate how much you can get on average from the potential backers and give the standard deviation of your estimate. (6pt)
 
 ### 1. Use the simple random sample you get from Q2 to estimate the ratio between the actual amount of funding pledged and the goal amount of funding and its standard deviation
 
