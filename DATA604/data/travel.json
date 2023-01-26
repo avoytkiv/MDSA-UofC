@@ -1,0 +1,65 @@
+{
+	"Trip": {
+		"Name": "Western Canadian Adventure",
+		"Segments": [{
+				"Flight": "Calgary to Vancouver",
+				"Departure Times": [
+					"0731",
+					"0845",
+					"1030",
+					"1332",
+					"1519"
+				],
+				"Airline": "CheapFlights Air",
+				"Departure City": "Calgary",
+				"Destination City": "Vancouver"
+			},
+			{
+				"Hotel": "Coastal Western",
+				"Room Type": ["Queen",
+					"King",
+					"Suite"
+				],
+				"Rating": 4,
+				"City": "Vancouver"
+			},
+			{
+				"Ground": "East Train",
+				"Destination City": "Calgary",
+				"Departure City": "Vancouver",
+				"Departure Times": [
+					"0930",
+					"1412"
+				]
+			},
+			{
+				"Trip": {
+					"Name": "Mountain Excursion",
+					"Segments": [{
+							"Ground": "Scenic Bus",
+							"Destination City": "Banff",
+							"Departure City": "Calgary",
+							"Departure Times": [
+								"0700",
+								"0800",
+								"0900",
+								"1000",
+								"1100"
+							]
+
+						},
+						{
+							"Ground": "Quick Train",
+							"Departure City": "Calgary",
+							"Destination City": "Banff",
+							"Departure Times": [
+								"1800"
+							]
+						}
+
+					]
+				}
+			}
+		]
+	}
+}

@@ -1,0 +1,325 @@
+Member Name,Member ID,Parent Member ID
+Total - Knowledge of languages,1,0
+Official languages,2,1
+English,3,2
+French,4,2
+Non-official languages,5,1
+Indigenous languages,6,5
+Algonquian languages,7,6
+Blackfoot,8,7
+Cree-Innu languages,9,7
+Atikamekw,10,9
+Cree languages,11,9
+Ililimowin (Moose Cree),12,11
+Inu Ayimun (Southern East Cree),13,11
+Iyiyiw-Ayimiwin (Northern East Cree),14,11
+Nehinawewin (Swampy Cree),15,11
+Nehiyawewin (Plains Cree),16,11
+Nihithawiwin (Woods Cree),17,11
+"Cree, n.o.s.",18,11
+Innu (Montagnais),19,9
+Naskapi,20,9
+Eastern Algonquian languages,21,7
+Mi'kmaq,22,21
+Wolastoqewi (Malecite),23,21
+Ojibway-Potawatomi languages,24,7
+Anicinabemowin (Algonquin),25,24
+Oji-Cree,26,24
+Ojibway languages,27,24
+Anishinaabemowin (Chippewa),28,27
+Daawaamwin (Odawa),29,27
+Saulteau (Western Ojibway),30,27
+"Ojibway, n.o.s.",31,27
+"Algonquian languages, n.i.e.",32,7
+Athabaskan languages,33,6
+Northern Athabaskan languages,34,33
+Dakelh (Carrier),35,34
+Dane-zaa (Beaver),36,34
+"Dene, n.o.s.",37,34
+Gwich'in,38,34
+Slavey-Hare languages,39,34
+Deh Gah Ghotie Zhatie (South Slavey),40,39
+Satuotine Yati (North Slavey),41,39
+"Slavey, n.o.s.",42,39
+Tahltan languages,43,34
+Kaska (Nahani),44,43
+Tahltan,45,43
+Tlicho (Dogrib),46,34
+Tse'khene (Sekani),47,34
+Tsilhqot'in (Chilcotin),48,34
+Tsuu T'ina (Sarsi),49,34
+Tutchone languages,50,34
+Northern Tutchone,51,50
+Southern Tutchone,52,50
+"Tutchone, n.o.s.",53,50
+Wetsuwet'en-Babine,54,34
+Tlingit,55,33
+"Athabaskan languages, n.i.e.",56,33
+Haida,57,6
+Inuktut (Inuit) languages,58,6
+Inuinnaqtun (Inuvialuktun),59,58
+Inuinnaqtun,60,59
+Inuvialuktun,61,59
+Inuktitut,62,58
+"Inuktut (Inuit) languages, n.i.e.",63,58
+Iroquoian languages,64,6
+Cayuga,65,64
+Mohawk,66,64
+Oneida,67,64
+"Iroquoian languages, n.i.e.",68,64
+Ktunaxa (Kutenai),69,6
+Michif,70,6
+Salish languages,71,6
+Halkomelem,72,71
+Lillooet,73,71
+Ntlakapamux (Thompson),74,71
+Secwepemctsin (Shuswap),75,71
+Squamish,76,71
+Straits,77,71
+Syilx (Okanagan),78,71
+"Salish languages, n.i.e.",79,71
+Siouan languages,80,6
+Assiniboine,81,80
+Dakota,82,80
+Stoney,83,80
+"Siouan languages, n.i.e.",84,80
+Tsimshian languages,85,6
+Gitxsan (Gitksan),86,85
+Nisga'a,87,85
+Tsimshian,88,85
+Wakashan languages,89,6
+Haisla,90,89
+Heiltsuk,91,89
+Kwak'wala (Kwakiutl),92,89
+Nuu-chah-nulth (Nootka),93,89
+"Wakashan languages, n.i.e.",94,89
+"Indigenous languages, n.i.e.",95,6
+"Indigenous languages, n.o.s.",96,6
+Non-Indigenous languages,97,5
+Afro-Asiatic languages,98,97
+Berber languages,99,98
+Kabyle,100,99
+Tamazight,101,99
+"Berber languages, n.i.e.",102,99
+Chadic languages,103,98
+Hausa,104,103
+Mina,105,103
+Coptic,106,98
+Cushitic languages,107,98
+Bilen,108,107
+Oromo,109,107
+Somali,110,107
+"Cushitic languages, n.i.e.",111,107
+Semitic languages,112,98
+Amharic,113,112
+Arabic,114,112
+Aramaic languages,115,112
+Assyrian Neo-Aramaic,116,115
+Chaldean Neo-Aramaic,117,115
+"Aramaic, n.o.s.",118,115
+Harari,119,112
+Hebrew,120,112
+Maltese,121,112
+Tigrigna,122,112
+"Semitic languages, n.i.e.",123,112
+Austro-Asiatic languages,124,97
+Khmer (Cambodian),125,124
+Vietnamese,126,124
+"Austro-Asiatic languages, n.i.e",127,124
+Austronesian languages,128,97
+Bikol,129,128
+"Bisaya, n.o.s.",130,128
+Cebuano,131,128
+Fijian,132,128
+Hiligaynon,133,128
+Ilocano,134,128
+Indonesian,135,128
+Kankanaey,136,128
+Kinaray-a,137,128
+Malagasy languages,138,128
+Merina,139,138
+"Malagasy, n.o.s.",140,138
+Malay,141,128
+"Pampangan (Kapampangan, Pampango)",142,128
+Pangasinan,143,128
+"Tagalog (Pilipino, Filipino)",144,128
+Waray-Waray,145,128
+"Austronesian languages, n.i.e.",146,128
+Creole languages,147,97
+Haitian Creole,148,147
+Jamaican English Creole,149,147
+Krio,150,147
+Morisyen,151,147
+Sango,152,147
+"Creole, n.o.s.",153,147
+"Creole languages, n.i.e.",154,147
+Dravidian languages,155,97
+Kannada,156,155
+Malayalam,157,155
+Tamil,158,155
+Telugu,159,155
+Tulu,160,155
+"Dravidian languages, n.i.e.",161,155
+Georgian,162,97
+Hmong-Mien languages,163,97
+Indo-European languages,164,97
+Albanian,165,164
+Armenian,166,164
+Balto-Slavic languages,167,164
+Baltic languages,168,167
+Latvian,169,168
+Lithuanian,170,168
+Slavic languages,171,167
+Belarusian,172,171
+Bulgarian,173,171
+Czech,174,171
+Macedonian,175,171
+Polish,176,171
+Russian,177,171
+Rusyn,178,171
+Serbo-Croatian,179,171
+Bosnian,180,179
+Croatian,181,179
+Serbian,182,179
+"Serbo-Croatian, n.i.e.",183,179
+Slovak,184,171
+Slovene (Slovenian),185,171
+Ukrainian,186,171
+"Slavic languages, n.i.e.",187,171
+Celtic languages,188,164
+Irish,189,188
+Scottish Gaelic,190,188
+Welsh,191,188
+"Celtic languages, n.i.e.",192,188
+Germanic languages,193,164
+Frisian,194,193
+High German languages,195,193
+German,196,195
+Pennsylvania German,197,195
+Swiss German,198,195
+Yiddish,199,195
+Low Saxon-Low Franconian languages,200,193
+Afrikaans,201,200
+Dutch,202,200
+"Low German, n.o.s.",203,200
+Low Saxon,204,200
+Plautdietsch,205,200
+Vlaams (Flemish),206,200
+Scandinavian languages,207,193
+Danish,208,207
+Icelandic,209,207
+Norwegian,210,207
+Swedish,211,207
+"Germanic languages, n.i.e.",212,193
+Greek,213,164
+Indo-Iranian languages,214,164
+Indo-Aryan languages,215,214
+Assamese,216,215
+Bengali,217,215
+Gujarati,218,215
+Hindi,219,215
+Kacchi,220,215
+Kashmiri,221,215
+Konkani,222,215
+Marathi,223,215
+Nepali,224,215
+Oriya languages,225,215
+Odia,226,225
+"Oriya, n.o.s.",227,225
+Punjabi (Panjabi),228,215
+Rohingya,229,215
+Sindhi,230,215
+Sinhala (Sinhalese),231,215
+Urdu,232,215
+"Indo-Aryan languages, n.i.e.",233,215
+Iranian languages,234,214
+Baluchi,235,234
+Kurdish,236,234
+Parsi,237,234
+Pashto,238,234
+Persian languages,239,234
+Dari,240,239
+Iranian Persian,241,239
+"Persian (Farsi), n.o.s.",242,239
+"Iranian languages, n.i.e.",243,234
+"Indo-Iranian languages, n.i.e.",244,214
+Italic (Romance) languages,245,164
+Catalan,246,245
+Italian,247,245
+Portuguese,248,245
+Romanian,249,245
+Spanish,250,245
+"Italic (Romance) languages, n.i.e.",251,245
+"Indo-European languages, n.i.e.",252,164
+Japanese,253,97
+Korean,254,97
+Mongolian,255,97
+Niger-Congo languages,256,97
+Akan (Twi),257,256
+Bamanankan,258,256
+Edo,259,256
+Éwé,260,256
+"Fulah (Pular, Pulaar, Fulfulde)",261,256
+Ga,262,256
+Ganda,263,256
+Gikuyu,264,256
+Igbo,265,256
+Kinyarwanda (Rwanda),266,256
+Lingala,267,256
+Luba-Kasai,268,256
+Mòoré,269,256
+Mwani,270,256
+Ndebele,271,256
+Rundi (Kirundi),272,256
+Shona,273,256
+Soninke,274,256
+Sotho-Tswana languages,275,256
+Swahili,276,256
+Wojenaka,277,256
+Wolof,278,256
+Yoruba,279,256
+"Niger-Congo languages, n.i.e.",280,256
+Nilo-Saharan languages,281,97
+Dinka,282,281
+Nuer,283,281
+"Nilo-Saharan languages, n.i.e.",284,281
+"African, n.o.s.",285,281
+Sign languages,286,97
+American Sign Language,287,286
+Quebec Sign Language,288,286
+"Sign languages, n.i.e.",289,286
+Sino-Tibetan languages,290,97
+Chinese languages,291,290
+Hakka,292,291
+Mandarin,293,291
+Min Dong,294,291
+"Min Nan (Chaochow, Teochow, Fukien, Taiwanese)",295,291
+Wu (Shanghainese),296,291
+Yue (Cantonese),297,291
+"Chinese, n.o.s.",298,291
+"Chinese languages, n.i.e.",299,291
+Tibeto-Burman languages,300,290
+Burmese,301,300
+Kuki-Chin languages,302,300
+Karenic languages,303,300
+S'gaw Karen,304,303
+"Karenic languages, n.i.e.",305,303
+Tibetan,306,300
+"Tibeto-Burman languages, n.i.e.",307,300
+"Sino-Tibetan languages, n.i.e.",308,290
+Tai-Kadai languages,309,97
+Lao,310,309
+Thai,311,309
+"Tai-Kadai languages, n.i.e.",312,309
+Turkic languages,313,97
+Azerbaijani,314,313
+Kazakh,315,313
+Turkish,316,313
+Uyghur,317,313
+Uzbek,318,313
+"Turkic languages, n.i.e.",319,313
+Uralic languages,320,97
+Estonian,321,320
+Finnish,322,320
+Hungarian,323,320
+"Other languages, n.i.e.",324,97
