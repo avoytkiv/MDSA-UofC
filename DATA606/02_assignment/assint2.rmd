@@ -68,7 +68,7 @@ ggpairs(PimaIndiansDiabetes, lower = list(continuous = "smooth_loess", combo = "
 
 ```
 
-```{r}
+```{r message=FALSE, warning=FALSE}
 # Check the “variance inflation factor” for each coefficient using imcdiag function from the package "regclass"
 library('regclass')
 VIF(model)
@@ -114,3 +114,86 @@ If we compare the misclassification rates of the two models, we can see that the
 
 ## Question 5
 Under the same training and test sets, apply a linear discriminant analysis (LDA) model to the training set using all the explanatory variables. Apply this fitted LDA model to the test set, calculate the misclassification rate based on the LDA-predicted results and the actual results. (3pt)
+```{r}
+# Apply a linear discriminant analysis (LDA) model to the training set using all the explanatory variables
+library('MASS')
+model3 <- lda(diabetes ~ ., data = train)
+model3
+```
+```{r}
+# Apply the fitted LDA model to the test set
+pred3 <- predict(model3, test)
+# Check the misclassification rate
+misclass_rate3 <- sum(pred3$class != test$diabetes)/dim(test)[1]
+# Print the misclassification rate
+misclass_rate3
+```
+
+## Question 6
+Suppose now you only want to use two explanatory variables among “pregnant”, “glucose”, “mass” and “pedigree” to establish the LDA model. Which two variables can give you the lowest error rate based on the training set? After you get the LDA model, apply it to the test set, what is the misclassification rate? (3pt)
+```{r}
+# Check the misclassification rate for each pair of variables
+variables <- c('pregnant', 'glucose', 'mass', 'pedigree')
+misclass_result <- list(var1=c(), var2=c(), misclass_rate=c())
+
+for (i in variables) {
+  for (j in variables) {
+    # Check if the pair is not the same
+    # And if the pair is not already in the list
+    if (i != j & !((i %in% misclass_result$var2) & (j %in% misclass_result$var1))) {
+      pair <- c(i, j)
+      model4 <- lda(reformulate(pair,"diabetes"), data = train)
+      pred4 <- predict(model4, test)
+      # Populate the list
+      misclass_result$var1 <- c(misclass_result$var1, i)
+      misclass_result$var2 <- c(misclass_result$var2, j)
+      misclass_result$misclass_rate <- c(misclass_result$misclass_rate, sum(pred4$class != test$diabetes)/dim(test)[1])
+    }
+  }
+}
+# Transform the list to a data frame
+misclass_result <- as.data.frame(misclass_result)
+# Sort the data frame by the misclassification rate
+misclass_result <- misclass_result[order(misclass_result$misclass_rate),]
+# Print the data frame
+misclass_result
+```
+The lowest error rate is 0.238. And it is achieved by the pair of variables “pregnant” and “glucose”.
+
+
+```{r}
+# Build the LDA model with the pair of variables that gives the lowest error rate
+model5 <- lda(diabetes ~ pregnant + glucose, data = train)
+# Apply the fitted LDA model to the test set
+pred5 <- predict(model5, test)
+# Check the misclassification rate
+misclass_rate5 <- sum(pred5$class != test$diabetes)/dim(test)[1]
+# Print the misclassification rate
+misclass_rate5
+```
+```{r LDA-plot, fig.width=8, fig.height=8}
+# Visualize the LDA model
+library('klaR')
+partimat(diabetes ~ pregnant + glucose, data = train, method="lda")
+```
+
+## Question 7
+Under the same training and test sets, if you switch to the quadratic discriminant analysis by using all the explanatory variables, does the misclassification rate get decreased or increased?
+```{r}
+# Apply a quadratic discriminant analysis (QDA) model to the training set using all the explanatory variables
+model6 <- qda(diabetes ~ ., data = train)
+model6
+```
+```{r}
+# Apply the fitted QDA model to the test set
+pred6 <- predict(model6, test)
+# Check the misclassification rate
+misclass_rate6 <- sum(pred6$class != test$diabetes)/dim(test)[1]
+# Print the misclassification rate
+misclass_rate6
+```
+```{r QDA-plot, fig.width=8, fig.height=8}
+# Visualize the QDA model
+library('klaR')
+partimat(diabetes ~ ., data = train, method="qda")
+```
