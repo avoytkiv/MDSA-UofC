@@ -4,5 +4,5 @@ The question answered with visual analysis is:
 
 _How do staff pick projects differ from normal projects in terms of success (backers, amount pledged, timeliness, etc.)?_
 
-[[kickstarter_picks.png|ALT TEXT]]
-[Text](kickstarter_picks.png)
+
+![Text](kickstarter_picks.png)
