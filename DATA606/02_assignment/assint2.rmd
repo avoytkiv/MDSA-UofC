@@ -26,7 +26,7 @@ names(PimaIndiansDiabetes)
 # Check how many classes there are (the variable “Diabetes”) and the class sizes
 table(PimaIndiansDiabetes$diabetes)
 ```
-The dataset has 768 observations and 9 variables.The names of variables are: preg, plas, pres, skin, test, mass, pedi, age, diabetes. There are two classes in the variable diabetes: neg and pos. The class sizes are 500 and 268, respectively.
+The dataset has 768 observations and 9 variables.The names of variables are: pregnant, glucose, pressure, triceps, insulin, mass, pedigree, age and diabetes. There are two classes in the variable diabetes: "neg" and "pos". The class sizes are 500 and 268, respectively.
 
 ## Question 2
 Split the dataset into two parts – training and test.The training part contains 400 individuals from the “neg” class and 200 units from the “pos” class. The test part contains the rest data.
@@ -56,7 +56,7 @@ summary(model)
 # Check encoding of the variable “diabetes”
 contrasts(PimaIndiansDiabetes$diabetes)
 ```
-Conclusion: Default encoding of the variable “diabetes” is 1 for "pos". There are no statistically _significant_ variables that contribute to the “pos” result in a negative way.
+Conclusion: Default encoding of the variable “diabetes” is 1 for "pos". There are no statistically _significant_ variables that contribute to the “pos” result in a negative way. From the non-significant variables, the variables pressure, triceps and insulin contribute to the “pos” result in a negative way.
 
 
 Check the “variance inflation factor” for each coefficient (e.g., using “vif” function from the package “car”). Do you detect multicollinearity?
@@ -192,6 +192,8 @@ misclass_rate6 <- sum(pred6$class != test$diabetes)/dim(test)[1]
 # Print the misclassification rate
 misclass_rate6
 ```
+The misclassification rate of the QDA model is slightly higher than the misclassification rate of the LDA model. So, the LDA model is better than the QDA model.
+
 ```{r QDA-plot, fig.width=8, fig.height=8}
 # Visualize the QDA model
 library('klaR')
