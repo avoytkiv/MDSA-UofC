@@ -11,9 +11,6 @@ Sun, Jan 29, 2023
 -   [Question 6](#question-6)
 -   [Question 7](#question-7)
 
-``` r
-knitr::opts_chunk$set(fig.path='Figs/')
-```
 
 ## Question 1
 
@@ -144,11 +141,14 @@ Check the “variance inflation factor” for each coefficient (e.g., using
 ``` r
 # Plot the correlation matrix with the help of the ggally package
 library('GGally')
+```
+
+``` r
 library('ggplot2')
 ggpairs(PimaIndiansDiabetes, lower = list(continuous = "smooth_loess", combo = "facethist", discrete = "facetbar", na = "na"))
 ```
 
-![](Figs/unnamed-chunk-5-1.png)<!-- -->
+![](Figs/correlation-matrix-1.png)<!-- -->
 
 ``` r
 # Check the “variance inflation factor” for each coefficient using imcdiag function from the package "regclass"
