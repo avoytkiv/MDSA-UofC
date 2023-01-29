@@ -1,0 +1,443 @@
+Assignment 2
+================
+Andrii Voitkiv
+Sun, Jan 29, 2023
+
+-   [Question 1](#question-1)
+-   [Question 2](#question-2)
+-   [Question 3](#question-3)
+-   [Question 4](#question-4)
+-   [Question 5](#question-5)
+-   [Question 6](#question-6)
+-   [Question 7](#question-7)
+
+``` r
+knitr::opts_chunk$set(fig.path='Figs/')
+```
+
+## Question 1
+
+Read the data “PimaIndiansDiabetes”, check the dimension of the dataset,
+the names of variables. Check how many classes there are (the variable
+“Diabetes”) and the class sizes. Check how R dummifies the “diabetes”
+variable. (3pt)
+
+``` r
+# Read the data
+library('mlbench')
+data(PimaIndiansDiabetes)
+# Check the dimension of the dataset
+dim(PimaIndiansDiabetes)
+```
+
+    ## [1] 768   9
+
+``` r
+# Check the names of variables
+names(PimaIndiansDiabetes)
+```
+
+    ## [1] "pregnant" "glucose"  "pressure" "triceps"  "insulin"  "mass"     "pedigree"
+    ## [8] "age"      "diabetes"
+
+``` r
+# Check how many classes there are (the variable “Diabetes”) and the class sizes
+table(PimaIndiansDiabetes$diabetes)
+```
+
+    ## 
+    ## neg pos 
+    ## 500 268
+
+The dataset has 768 observations and 9 variables.The names of variables
+are: pregnant, glucose, pressure, triceps, insulin, mass, pedigree, age
+and diabetes. There are two classes in the variable diabetes: “neg” and
+“pos”. The class sizes are 500 and 268, respectively.
+
+## Question 2
+
+Split the dataset into two parts – training and test.The training part
+contains 400 individuals from the “neg” class and 200 units from the
+“pos” class. The test part contains the rest data.
+
+``` r
+# Sort the dataset by the variable “diabetes”
+PimaIndiansDiabetes <- PimaIndiansDiabetes[order(PimaIndiansDiabetes$diabetes),]
+# Select 400 individuals from the “neg” class and 200 units from the “pos” class
+train_neg <- PimaIndiansDiabetes[1:400,]
+train_pos <- PimaIndiansDiabetes[501:700,]
+# Combine the two datasets
+train <- rbind(train_neg, train_pos)
+# Select the rest data as the test part
+test <- PimaIndiansDiabetes[-c(1:400, 501:700),]
+# Check the dimension of the training and test parts
+dim(train)[1]
+```
+
+    ## [1] 600
+
+``` r
+dim(test)[1]
+```
+
+    ## [1] 168
+
+Let “diabetes” be the response variable, get a logistic regression model
+based on the training part using all the explanatory variables, which
+variables contribute to the “pos” result in a negative way?
+
+``` r
+# Get a logistic regression model based on the training part using all the explanatory variables
+model <- glm(diabetes ~ ., data = train, family = binomial)
+# Check the coefficients
+summary(model)
+```
+
+    ## 
+    ## Call:
+    ## glm(formula = diabetes ~ ., family = binomial, data = train)
+    ## 
+    ## Deviance Residuals: 
+    ##     Min       1Q   Median       3Q      Max  
+    ## -2.5471  -0.7454  -0.4143   0.7333   2.7877  
+    ## 
+    ## Coefficients:
+    ##              Estimate Std. Error z value Pr(>|z|)    
+    ## (Intercept) -8.374805   0.822113 -10.187  < 2e-16 ***
+    ## pregnant     0.123953   0.036166   3.427  0.00061 ***
+    ## glucose      0.031845   0.004100   7.767 8.02e-15 ***
+    ## pressure    -0.010692   0.005835  -1.832  0.06691 .  
+    ## triceps     -0.001135   0.007713  -0.147  0.88300    
+    ## insulin     -0.001079   0.001031  -1.047  0.29517    
+    ## mass         0.100329   0.017173   5.842 5.15e-09 ***
+    ## pedigree     1.060728   0.337801   3.140  0.00169 ** 
+    ## age          0.008144   0.010555   0.772  0.44036    
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## 
+    ## (Dispersion parameter for binomial family taken to be 1)
+    ## 
+    ##     Null deviance: 763.82  on 599  degrees of freedom
+    ## Residual deviance: 563.53  on 591  degrees of freedom
+    ## AIC: 581.53
+    ## 
+    ## Number of Fisher Scoring iterations: 5
+
+``` r
+# Check encoding of the variable “diabetes”
+contrasts(PimaIndiansDiabetes$diabetes)
+```
+
+    ##     pos
+    ## neg   0
+    ## pos   1
+
+Conclusion: Default encoding of the variable “diabetes” is 1 for “pos”.
+There are no statistically *significant* variables that contribute to
+the “pos” result in a negative way. From the non-significant variables,
+the variables pressure, triceps and insulin contribute to the “pos”
+result in a negative way.
+
+Check the “variance inflation factor” for each coefficient (e.g., using
+“vif” function from the package “car”). Do you detect multicollinearity?
+
+``` r
+# Plot the correlation matrix with the help of the ggally package
+library('GGally')
+library('ggplot2')
+ggpairs(PimaIndiansDiabetes, lower = list(continuous = "smooth_loess", combo = "facethist", discrete = "facetbar", na = "na"))
+```
+
+![](Figs/unnamed-chunk-5-1.png)<!-- -->
+
+``` r
+# Check the “variance inflation factor” for each coefficient using imcdiag function from the package "regclass"
+library('regclass')
+VIF(model)
+```
+
+    ## pregnant  glucose pressure  triceps  insulin     mass pedigree      age 
+    ## 1.389109 1.232805 1.152616 1.497087 1.494973 1.185088 1.039670 1.515534
+
+The correlation matrix shows that there is no multicollinearity between
+the variables. The variance inflation factor is less than 5 for all the
+variables, so there is no multicollinearity.
+
+## Question 3
+
+Apply your fitted logistic regression model to the test set. Suppose a
+prediction of “pos” is made if P(Y=pos\|X1,…,Xp)≥0.5 , check the
+misclassification rate (the ratio between the number of incorrect
+predictions and test size). (4pt)
+
+``` r
+# Apply the fitted logistic regression model to the test set
+pred <- predict(model, test, type = "response")
+# Check the misclassification rate
+misclass_rate <- sum(ifelse(pred >= 0.5, 'pos', 'neg') != test$diabetes)/dim(test)[1]
+# Print the misclassification rate
+misclass_rate
+```
+
+    ## [1] 0.2440476
+
+## Question 4
+
+Let the significance level be 0.1, remove the explanatory variables
+whose coefficients are NOT significantly different from 0. Re-fit a
+logistic regression model and repeat Step 3 to calculate the
+misclassification rate. (3pt)
+
+``` r
+# Check the sificance level of the coefficients with the significance level 0.1
+summary(model)
+```
+
+    ## 
+    ## Call:
+    ## glm(formula = diabetes ~ ., family = binomial, data = train)
+    ## 
+    ## Deviance Residuals: 
+    ##     Min       1Q   Median       3Q      Max  
+    ## -2.5471  -0.7454  -0.4143   0.7333   2.7877  
+    ## 
+    ## Coefficients:
+    ##              Estimate Std. Error z value Pr(>|z|)    
+    ## (Intercept) -8.374805   0.822113 -10.187  < 2e-16 ***
+    ## pregnant     0.123953   0.036166   3.427  0.00061 ***
+    ## glucose      0.031845   0.004100   7.767 8.02e-15 ***
+    ## pressure    -0.010692   0.005835  -1.832  0.06691 .  
+    ## triceps     -0.001135   0.007713  -0.147  0.88300    
+    ## insulin     -0.001079   0.001031  -1.047  0.29517    
+    ## mass         0.100329   0.017173   5.842 5.15e-09 ***
+    ## pedigree     1.060728   0.337801   3.140  0.00169 ** 
+    ## age          0.008144   0.010555   0.772  0.44036    
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## 
+    ## (Dispersion parameter for binomial family taken to be 1)
+    ## 
+    ##     Null deviance: 763.82  on 599  degrees of freedom
+    ## Residual deviance: 563.53  on 591  degrees of freedom
+    ## AIC: 581.53
+    ## 
+    ## Number of Fisher Scoring iterations: 5
+
+With the significance level 0.1, the coefficients of the variables
+pregnant, glucose, pressure, mass, pedigree are significantly different
+from 0. So, we will keep them in the model and will drop the rest.
+
+``` r
+# Re-fit a logistic regression model
+model2 <- glm(diabetes ~ pregnant + glucose + pressure + mass + pedigree, data = train, family = binomial)
+# Check the coefficients
+summary(model2)
+```
+
+    ## 
+    ## Call:
+    ## glm(formula = diabetes ~ pregnant + glucose + pressure + mass + 
+    ##     pedigree, family = binomial, data = train)
+    ## 
+    ## Deviance Residuals: 
+    ##     Min       1Q   Median       3Q      Max  
+    ## -2.7607  -0.7427  -0.4163   0.7079   2.7910  
+    ## 
+    ## Coefficients:
+    ##              Estimate Std. Error z value Pr(>|z|)    
+    ## (Intercept) -8.030591   0.777758 -10.325  < 2e-16 ***
+    ## pregnant     0.142782   0.031491   4.534 5.78e-06 ***
+    ## glucose      0.031020   0.003711   8.359  < 2e-16 ***
+    ## pressure    -0.010248   0.005606  -1.828  0.06755 .  
+    ## mass         0.095437   0.016191   5.895 3.76e-09 ***
+    ## pedigree     1.009755   0.331513   3.046  0.00232 ** 
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## 
+    ## (Dispersion parameter for binomial family taken to be 1)
+    ## 
+    ##     Null deviance: 763.82  on 599  degrees of freedom
+    ## Residual deviance: 565.91  on 594  degrees of freedom
+    ## AIC: 577.91
+    ## 
+    ## Number of Fisher Scoring iterations: 5
+
+``` r
+# Apply the fitted logistic regression model to the test set
+pred2 <- predict(model2, test, type = "response")
+# Check the misclassification rate
+misclass_rate2 <- sum(ifelse(pred2 >= 0.5, 'pos', 'neg') != test$diabetes)/dim(test)[1]
+# Print the misclassification rates
+misclass_rate2
+```
+
+    ## [1] 0.2380952
+
+If we compare the misclassification rates of the two models, we can see
+that the misclassification rate of the second model is slightly lower
+than the misclassification rate of the first model. So, the second model
+is better than the first one.
+
+## Question 5
+
+Under the same training and test sets, apply a linear discriminant
+analysis (LDA) model to the training set using all the explanatory
+variables. Apply this fitted LDA model to the test set, calculate the
+misclassification rate based on the LDA-predicted results and the actual
+results. (3pt)
+
+``` r
+# Apply a linear discriminant analysis (LDA) model to the training set using all the explanatory variables
+library('MASS')
+model3 <- lda(diabetes ~ ., data = train)
+model3
+```
+
+    ## Call:
+    ## lda(diabetes ~ ., data = train)
+    ## 
+    ## Prior probabilities of groups:
+    ##       neg       pos 
+    ## 0.6666667 0.3333333 
+    ## 
+    ## Group means:
+    ##     pregnant glucose pressure triceps insulin     mass pedigree   age
+    ## neg     3.28 109.535   67.645  19.745  67.490 30.03325 0.433685 31.34
+    ## pos     4.80 139.910   69.975  22.355 102.165 35.35600 0.565560 36.59
+    ## 
+    ## Coefficients of linear discriminants:
+    ##                    LD1
+    ## pregnant  0.0973445857
+    ## glucose   0.0248889777
+    ## pressure -0.0091753665
+    ## triceps  -0.0012632836
+    ## insulin  -0.0006931031
+    ## mass      0.0671702652
+    ## pedigree  0.7713159547
+    ## age       0.0058526388
+
+``` r
+# Apply the fitted LDA model to the test set
+pred3 <- predict(model3, test)
+# Check the misclassification rate
+misclass_rate3 <- sum(pred3$class != test$diabetes)/dim(test)[1]
+# Print the misclassification rate
+misclass_rate3
+```
+
+    ## [1] 0.2202381
+
+## Question 6
+
+Suppose now you only want to use two explanatory variables among
+“pregnant”, “glucose”, “mass” and “pedigree” to establish the LDA model.
+Which two variables can give you the lowest error rate based on the
+training set? After you get the LDA model, apply it to the test set,
+what is the misclassification rate? (3pt)
+
+``` r
+# Check the misclassification rate for each pair of variables
+variables <- c('pregnant', 'glucose', 'mass', 'pedigree')
+misclass_result <- list(var1=c(), var2=c(), misclass_rate=c())
+
+for (i in variables) {
+  for (j in variables) {
+    # Check if the pair is not the same
+    # And if the pair is not already in the list
+    if (i != j & !((i %in% misclass_result$var2) & (j %in% misclass_result$var1))) {
+      pair <- c(i, j)
+      model4 <- lda(reformulate(pair,"diabetes"), data = train)
+      pred4 <- predict(model4, test)
+      # Populate the list
+      misclass_result$var1 <- c(misclass_result$var1, i)
+      misclass_result$var2 <- c(misclass_result$var2, j)
+      misclass_result$misclass_rate <- c(misclass_result$misclass_rate, sum(pred4$class != test$diabetes)/dim(test)[1])
+    }
+  }
+}
+# Transform the list to a data frame
+misclass_result <- as.data.frame(misclass_result)
+# Sort the data frame by the misclassification rate
+misclass_result <- misclass_result[order(misclass_result$misclass_rate),]
+# Print the data frame
+misclass_result
+```
+
+    ##       var1     var2 misclass_rate
+    ## 1 pregnant  glucose     0.2380952
+    ## 5  glucose pedigree     0.2559524
+    ## 4  glucose     mass     0.2619048
+    ## 3 pregnant pedigree     0.3392857
+    ## 2 pregnant     mass     0.3630952
+    ## 6     mass pedigree     0.3690476
+
+The lowest error rate is 0.238. And it is achieved by the pair of
+variables “pregnant” and “glucose”.
+
+``` r
+# Build the LDA model with the pair of variables that gives the lowest error rate
+model5 <- lda(diabetes ~ pregnant + glucose, data = train)
+# Apply the fitted LDA model to the test set
+pred5 <- predict(model5, test)
+# Check the misclassification rate
+misclass_rate5 <- sum(pred5$class != test$diabetes)/dim(test)[1]
+# Print the misclassification rate
+misclass_rate5
+```
+
+    ## [1] 0.2380952
+
+``` r
+# Visualize the LDA model
+library('klaR')
+partimat(diabetes ~ pregnant + glucose, data = train, method="lda")
+```
+
+![](Figs/LDA-plot-1.png)<!-- -->
+
+## Question 7
+
+Under the same training and test sets, if you switch to the quadratic
+discriminant analysis by using all the explanatory variables, does the
+misclassification rate get decreased or increased?
+
+``` r
+# Apply a quadratic discriminant analysis (QDA) model to the training set using all the explanatory variables
+model6 <- qda(diabetes ~ ., data = train)
+model6
+```
+
+    ## Call:
+    ## qda(diabetes ~ ., data = train)
+    ## 
+    ## Prior probabilities of groups:
+    ##       neg       pos 
+    ## 0.6666667 0.3333333 
+    ## 
+    ## Group means:
+    ##     pregnant glucose pressure triceps insulin     mass pedigree   age
+    ## neg     3.28 109.535   67.645  19.745  67.490 30.03325 0.433685 31.34
+    ## pos     4.80 139.910   69.975  22.355 102.165 35.35600 0.565560 36.59
+
+``` r
+# Apply the fitted QDA model to the test set
+pred6 <- predict(model6, test)
+# Check the misclassification rate
+misclass_rate6 <- sum(pred6$class != test$diabetes)/dim(test)[1]
+# Print the misclassification rate
+misclass_rate6
+```
+
+    ## [1] 0.2559524
+
+The misclassification rate of the QDA model is slightly higher than the
+misclassification rate of the LDA model. So, the LDA model is better
+than the QDA model.
+
+``` r
+# Visualize the QDA model
+library('klaR')
+partimat(diabetes ~ ., data = train, method="qda")
+```
+
+![](Figs/QDA-plot-1.png)<!-- -->

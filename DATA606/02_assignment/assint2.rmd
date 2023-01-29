@@ -1,7 +1,7 @@
 ---
 title: 'Assignment 2'
 author: 'Andrii Voitkiv'
-date: "January 30, 2023"
+date: "`r format(Sys.time(), '%a, %b %d, %Y')`"
 output:
     github_document:
         math_method: webtex
@@ -60,7 +60,7 @@ Conclusion: Default encoding of the variable “diabetes” is 1 for "pos". Ther
 
 
 Check the “variance inflation factor” for each coefficient (e.g., using “vif” function from the package “car”). Do you detect multicollinearity?
-```{r}
+```{r message=FALSE, warning=FALSE}
 # Plot the correlation matrix with the help of the ggally package
 library('GGally')
 library('ggplot2')
