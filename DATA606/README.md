@@ -8,7 +8,9 @@ Design of surveys and data collection, bias and efficiency of surveys. Sampling 
 - Ratio estimation.
 
 [Assignment 2](02_assignment/solution.md): 
-- 
+- Logistic regression;
+- Linear discriminant analysis;
+- Quadratic discriminant analysis.
 
 [Assignment 3](03_assignment/solutions.md): 
 - 
