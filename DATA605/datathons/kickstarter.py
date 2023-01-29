@@ -56,13 +56,22 @@ kickstarter_backers = kickstarter_backers.dropna(axis=0)
 fig, (ax1, ax2) = plt.subplots(2, 1, facecolor='#f0eeee')
 fig.set_size_inches(8, 12)
 # Plot the line graph of 'Staff Pick' and 'backers_count'
-kickstarter_backers.plot(kind='line', ax=ax1, color=['#c449cc', '#525252'], marker='o', linewidth=1, ms=2)
+kickstarter_backers.plot(kind='line', ax=ax1, color=['#525252', '#c449cc'], marker='', linewidth=1, ms=2)
 # Change the line type
 plt.rcParams['lines.linestyle'] = '-'
 # Fill the area between the two lines depending on which line is higher
-ax1.fill_between(kickstarter_backers.index, kickstarter_backers['Normal projects'], kickstarter_backers['Kickstarter picks'], where=kickstarter_backers['Normal projects'] < kickstarter_backers['Kickstarter picks'], facecolor='#c449cc', alpha=0.2)
-ax1.fill_between(kickstarter_backers.index, kickstarter_backers['Normal projects'], kickstarter_backers['Kickstarter picks'], where=kickstarter_backers['Normal projects'] > kickstarter_backers['Kickstarter picks'], facecolor='#525252', alpha=0.2)
-# Put text on the plot in the middle of the area between the two lines between 2020 and 2022
+ax1.fill_between(kickstarter_backers.index, kickstarter_backers['Normal projects'], kickstarter_backers['Kickstarter picks'], where=kickstarter_backers['Normal projects'] < kickstarter_backers['Kickstarter picks'], facecolor='#c449cc', alpha=0.2, interpolate=True)
+ax1.fill_between(kickstarter_backers.index, kickstarter_backers['Normal projects'], kickstarter_backers['Kickstarter picks'], where=kickstarter_backers['Normal projects'] > kickstarter_backers['Kickstarter picks'], facecolor='#525252', alpha=0.2, interpolate=True)
+# Annotation text
+ann_text1 = '1. Kickstarter picks consistently attracted \nmore backers than normal projects \nfrom 2009 to 2016.'
+ann_text2 = '2. Then, for three years, Kickstarter picks \nshowed sharp decrease bottoming out in 2018'
+ann_text3 = '3. Though the initial trend has resumed, \nand the gap has widened.'
+ax1.text(x=2014, y=45000, s='1', color='#c449cc', fontsize=16, weight='bold', alpha=0.8)
+ax1.text(x=2018, y=60000, s='2', color='#525252', fontsize=16, weight='bold', alpha=0.8)
+ax1.text(x=2021, y=65000, s='3', color='#c449cc', fontsize=16, weight='bold', alpha=0.8)
+ax1.text(x=2009, y=85000, s=ann_text1 , color='#c449cc', fontsize=10, fontstyle='italic', alpha=1)
+ax1.text(x=2009, y=77000, s=ann_text2 , color='#525252', fontsize=10, fontstyle='italic', alpha=1)
+ax1.text(x=2009, y=69000, s=ann_text3 , color='#c449cc', fontsize=10, fontstyle='italic', alpha=1)
 
 # Make the plot look nice
 ax1.set_title('How do staff pick projects differ from normal projects in terms of backers?', fontsize=20, color=font_color, **csfont)
@@ -71,6 +80,8 @@ ax1.set_ylabel('Number of backers', fontsize=16, color=font_color, **hfont)
 # Change legend title and font size
 ax1.legend(title='', title_fontsize=16, fontsize=16)
 ax1.legend(loc=2, prop={'size': 10})
+# Legend false
+ax1.legend().set_visible(False)
 
 
 # Plot line on that figure
