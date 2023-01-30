@@ -1,19 +1,34 @@
 ---
 title: "Assignment 2"
-author: "Andrii Voitkiv"
+subtitle: "Logistic regression, LDA, QDA"
+author:
+  - Andrii Voitkiv
+date: "`r format(Sys.time(), '%a, %b %d, %Y')`"
+geometry: margin=3cm
 output:
-  html_document:
+  github_document:
+    html_preview: false
+    math_method: webtex
     toc: true
-    toc_float: true
-    number_sections: false
-    theme: united
-    highlight: tango
-    df_print: paged
-    self_contained: true
-    keep_md: true
     toc_depth: 2
 ---
 
+```{r global_options}
+knitr::opts_chunk$set(fig.path='Figs/')
+```
+<!-- title: "Assignment 2"
+author: "Andrii Voitkiv"
+output:
+html_document:
+toc: true
+toc_float: true
+number_sections: false
+theme: united
+highlight: tango
+df_print: paged
+self_contained: true
+keep_md: true
+toc_depth: 2 -->
 
 ## Question 1
 _Read the data “PimaIndiansDiabetes”, check the dimension of the dataset, the names of variables. Check how many classes there are (the variable “Diabetes”) and the class sizes. Check how R dummifies the “diabetes” variable._
