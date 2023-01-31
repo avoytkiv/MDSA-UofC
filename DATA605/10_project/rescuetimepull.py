@@ -21,7 +21,7 @@ baseurl = 'https://www.rescuetime.com/anapi/data?key='
 url =  baseurl + KEY
 
 # Configure These to Your Preferred Dates - default is the last week
-start_date = str(date.today()-relativedelta.relativedelta(weeks=3*52))  # Start date for data
+start_date = str(date.today()-relativedelta.relativedelta(weeks=10*52))  # Start date for data
 end_date   = str(date.today())  # End date for data
 
 # Adjustable by Time Period
@@ -74,10 +74,10 @@ activities_hourly = pd.DataFrame.from_dict(activities_hour_log)
 activities_hourly.columns = ['Date', 'Seconds', 'NumberPeople', 'Actitivity', 'Document', 'Category', 'Productivity']
 activities_hourly.to_csv('data/rescuetime-hourly-' + start_date + '-to-' + end_date + '.csv')
 
-activities_minute_log = rescuetime_get_activities(start_date, end_date, 'minute')
-activities_per_minute = pd.DataFrame.from_dict(activities_minute_log)
-activities_per_minute.columns = ['Date', 'Seconds', 'NumberPeople', 'Actitivity', 'Document', 'Category', 'Productivity']
-activities_per_minute.to_csv('data/rescuetime-by-minute' + start_date + '-to-' + end_date + '.csv')
+# activities_minute_log = rescuetime_get_activities(start_date, end_date, 'minute')
+# activities_per_minute = pd.DataFrame.from_dict(activities_minute_log)
+# activities_per_minute.columns = ['Date', 'Seconds', 'NumberPeople', 'Actitivity', 'Document', 'Category', 'Productivity']
+# activities_per_minute.to_csv('data/rescuetime-by-minute' + start_date + '-to-' + end_date + '.csv')
 
 import glob
 import os

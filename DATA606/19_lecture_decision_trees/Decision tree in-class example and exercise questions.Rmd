@@ -1,0 +1,248 @@
+---
+title: "Tree-based classification"
+output: html_notebook
+---
+
+### Regression tree
+
+#### In-class example
+
+Step 1: install "tree" package if you have not done so. Library "ISLR" package and attach "Hitters" dataset, check the names and summary of the variables in the dataset.
+
+```{r}
+library(tree)
+library(MASS)
+library(ISLR)
+```
+```{r}
+data(Hitters)
+names(Hitters)
+dim(Hitters)
+```
+
+Step 2: remove observations without salary values and take log-transform of the salary values.
+```{r}
+No_salary=subset(Hitters,is.na(Hitters$Salary))
+New_data=na.omit(Hitters)
+New_data$Salary=log(New_data$Salary)
+```
+
+Step 3: Take a sample with $75\%$ observations, fit a regression tree to it using ${\color{red}{Hits}}$ and ${\color{red}{Years}}$ as predictors.
+```{r}
+set.seed (1)
+train=sample(1:nrow(New_data),3/4*nrow(New_data))
+test=New_data[-train,]
+tree.salary<-tree(Salary~Years+Hits, New_data, subset=train)
+summary(tree.salary)
+```
+
+Step 4: plot the tree 
+```{r}
+plot(tree.salary)
+text(tree.salary ,pretty =0)
+```
+
+Step 5: apply this unpruned tree to the test set, compare the predicted responses and the observed responses in the test set.
+```{r}
+salary_hat<-predict(tree.salary,test)
+plot(exp(salary_hat),exp(test$Salary))
+abline(0,1)
+sqrt(mean((exp(salary_hat)-exp(test$Salary))^2)) #the mean squared error
+```
+
+Step 6: Use cross-validation to select the "best" tree.
+```{r}
+cv.salary=cv.tree(tree.salary)
+plot(cv.salary$size,cv.salary$dev,type='b')
+```
+
+Step 7: Now prune the tree using the "best" number of nodes.
+```{r}
+prune.salary=prune.tree(tree.salary,best=4)
+plot(prune.salary)
+text(prune.salary,pretty=0)
+```
+
+Step 8: Apply the pruned tree to the test set.
+```{r}
+salary_hat<-predict(prune.salary,test)
+plot(exp(salary_hat),exp(test$Salary))
+abline(0,1)
+sqrt(mean((exp(salary_hat)-exp(test$Salary))^2))
+```
+
+$$\\[0.3in]$$
+
+#### In-class exercise questions for regression tree
+
+We study ${\color{red}{Boston}}$ dataset, see https://www.cs.toronto.edu/~delve/data/boston/bostonDetail.html for the details of this dataset.
+
+Step 1: load the data and check the names of the variables and the dimension of this dataset.
+
+
+
+Step 2 (validation approach): split the dataset into training and test parts where the training part is constructed using $50\%$ of the total data and simple random sampling. Apply the regression tree to model the relationship between ${\color{red}{medv}}$ and all the other variables.
+
+
+
+Step 3: plot the tree.
+
+
+
+Step 4: apply the fitted (unpruned) tree to predict the "medv" of test set. Compare the predicted values and the actual values.
+
+
+
+Step 5: apply cross-validation to select the "best" number of nodes and prune the tree.
+
+
+
+Step 6: apply the pruned tree to the prediction and calculate the square root of mean squared error.
+
+```{r}
+# Step 1: load the data and check the names of the variables and the dimension of this dataset.
+library(MASS)
+data(Boston)
+names(Boston)
+dim(Boston)
+```
+```{r}
+# Step 2 (validation approach): split the dataset into training and test parts where the training part is constructed using $50\%$ of the total data and simple random sampling. Apply the regression tree to model the relationship between ${\color{red}{medv}}$ and all the other variables.
+set.seed(1)
+train=sample(1:nrow(Boston),nrow(Boston)/2)
+test=Boston[-train,]
+tree.boston<-tree(medv~.,Boston,subset=train)
+summary(tree.boston)
+```
+
+```{r}
+# Step 3: plot the tree.
+plot(tree.boston)
+text(tree.boston,pretty=0)
+```
+```{r}
+# Step 4: apply the fitted (unpruned) tree to predict the "medv" of test set. Compare the predicted values and the actual values.
+medv_hat<-predict(tree.boston,test)
+plot(medv_hat,test$medv)
+abline(0,1)
+sqrt(mean((medv_hat-test$medv)^2))
+```
+
+```{r}
+# Step 5: apply cross-validation to select the "best" number of nodes and prune the tree.
+cv.boston=cv.tree(tree.boston)
+plot(cv.boston$size,cv.boston$dev,type='b')
+prune.boston=prune.tree(tree.boston,best=4)
+plot(prune.boston)
+text(prune.boston,pretty=0)
+```
+```{r}
+# Step 6: apply the pruned tree to the prediction and calculate the square root of mean squared error.
+medv_hat<-predict(prune.boston,test)
+plot(medv_hat,test$medv)
+abline(0,1)
+sqrt(mean((medv_hat-test$medv)^2))
+```
+
+$$\\[0.3in]$$
+
+### Classification tree
+
+#### In-class example
+
+Step 1: Install package "kmed" if you have not done so. Attach "Heart" dataset and check the names of the variables and the dimension of this dataset.
+```{r}
+library(kmed)
+```
+```{r}
+data(heart)
+names(heart)
+dim(heart)
+```
+
+Step 2: Use "Yes" and "No" to indicate whether or not the patient has heart disease. Apply the validation approach and fit a classification tree to the training data.
+```{r}
+set.seed(1)
+HD=ifelse(heart$class>0,"Yes","No")
+New_data=data.frame(heart,HD)
+#New_data$HD=as.factor(New_data$HD)   # You need to make the binary response as factor rather than character.
+New_data=New_data[,-14]
+set.seed(1)
+idx=sample(1:nrow(New_data),3/4*nrow(New_data))
+train=New_data[idx,]
+test=New_data[-idx,]
+tree.class<-tree(factor(HD)~., train)
+summary(tree.class)
+```
+
+Step 3: plot the tree.
+```{r}
+plot(tree.class)
+text(tree.class, pretty=0)
+```
+
+Step 4: Apply the fitted tree to the test set
+```{r}
+tree.pred<-predict(tree.class,test,type = "class")
+table(tree.pred,test$HD)
+```
+
+Step 5: prune the tree using cross-validation (We use
+the argument ${\color{red}{FUN=prune.misclass}}$ in order to indicate that we want the
+classification error rate to guide the cross-validation and pruning process)
+```{r}
+set.seed(3)
+cv.class<-cv.tree(tree.class, FUN = prune.misclass) 
+plot(cv.class$size, cv.class$dev,type="b")
+```
+
+Step 6: find the "best" tree using the cross-validation result
+```{r}
+prune.class=prune.tree(tree.class,best=4)
+plot(prune.class)
+text(prune.class,pretty=0)
+```
+
+Step 7: apply the pruned tree to do prediction
+```{r}
+prune.pred=predict(prune.class,test,type="class")
+table(prune.pred,test$HD)
+```
+$$\\[0.3in]$$
+
+#### In-class exercise questions
+
+We study the ${\color{red}{Carseats}}$ data set, see https://rdrr.io/cran/ISLR/man/Carseats.html for the details. 
+
+Step 1: load the data set, check the names of the variables and the dimension of the dataset.
+
+
+Step 2: We are interested in predicting whether or not the sales is high. Note that in the original data set, "sales" is a continuous variable, we change it to be a binary variable using cutpoint $8$. In other words, if $Sales>8$ then it is high and otherwise low.
+
+
+
+Step 3: Split the data set into train and test parts where the train part contains $50\%$ of the total data and is constructed using simple random sampling. Apply a classification tree to the train part to establish the relationship between "High" and other variables.
+
+
+
+Step 4: plot the tree.
+
+
+
+Step 5: use the fitted (unpruned) tree to predict the sales (high or not) of the test set.
+
+
+
+Step 6: Use cross-validation to select the "best" number of nodes and prune the tree.
+
+
+
+Step 7: apply the pruned tree to the prediction.
+
+```{r}
+data(Carseats)
+names(Carseats)
+
+```
+
+
