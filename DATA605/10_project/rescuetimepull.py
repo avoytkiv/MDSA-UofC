@@ -21,8 +21,8 @@ baseurl = 'https://www.rescuetime.com/anapi/data?key='
 url =  baseurl + KEY
 
 # Configure These to Your Preferred Dates - default is the last week
-start_date = '2021-01-01' #str(date.today()-relativedelta.relativedelta(weeks=1))  # Start date for data
-end_date   = '2021-12-31' #str(date.today())  # End date for data
+start_date = str(date.today()-relativedelta.relativedelta(weeks=1))  # Start date for data
+end_date   = str(date.today())  # End date for data
 # Device Type
 device = 'mobile' # pc
 # Adjustable by Time Period
