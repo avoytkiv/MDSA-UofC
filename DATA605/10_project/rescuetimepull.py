@@ -21,11 +21,12 @@ baseurl = 'https://www.rescuetime.com/anapi/data?key='
 url =  baseurl + KEY
 
 # Configure These to Your Preferred Dates - default is the last week
-start_date = str(date.today()-relativedelta.relativedelta(weeks=10*52))  # Start date for data
-end_date   = str(date.today())  # End date for data
-
+start_date = '2021-01-01' #str(date.today()-relativedelta.relativedelta(weeks=1))  # Start date for data
+end_date   = '2021-12-31' #str(date.today())  # End date for data
+# Device Type
+device = 'mobile' # pc
 # Adjustable by Time Period
-def rescuetime_get_activities(start_date, end_date, resolution='hour'):
+def rescuetime_get_activities(start_date, end_date, resolution='hour', device='mobile'):
     # Configuration for Query
     # SEE: https://www.rescuetime.com/apidoc
     payload = {
@@ -34,7 +35,8 @@ def rescuetime_get_activities(start_date, end_date, resolution='hour'):
         'restrict_kind':'document',
         'restrict_begin': start_date,
         'restrict_end': end_date,
-        'format':'json' #csv
+        'format':'json', #csv
+        'restrict_source_type': device
     }
 
     # Setup Iteration - by Day
@@ -67,9 +69,9 @@ def rescuetime_get_activities(start_date, end_date, resolution='hour'):
 
     return activities_list
 
-activities_day_log = rescuetime_get_activities(start_date, end_date, 'day')
+activities_day_log = rescuetime_get_activities(start_date, end_date, 'day', 'mobile')
 activities_daily = pd.DataFrame.from_dict(activities_day_log)
-activities_hour_log = rescuetime_get_activities(start_date, end_date, 'hour')
+activities_hour_log = rescuetime_get_activities(start_date, end_date, 'hour', 'mobile')
 activities_hourly = pd.DataFrame.from_dict(activities_hour_log)
 activities_hourly.columns = ['Date', 'Seconds', 'NumberPeople', 'Actitivity', 'Document', 'Category', 'Productivity']
 activities_hourly.to_csv('data/rescuetime-hourly-' + start_date + '-to-' + end_date + '.csv')
@@ -79,18 +81,4 @@ activities_hourly.to_csv('data/rescuetime-hourly-' + start_date + '-to-' + end_d
 # activities_per_minute.columns = ['Date', 'Seconds', 'NumberPeople', 'Actitivity', 'Document', 'Category', 'Productivity']
 # activities_per_minute.to_csv('data/rescuetime-by-minute' + start_date + '-to-' + end_date + '.csv')
 
-import glob
-import os
-
-# import hourly data exports and create a single data frame
-path = 'data/'
-allFiles = glob.glob(path + "/rescuetime-hourly*.csv")
-timelogs = pd.DataFrame()
-list_ = []
-for file_ in allFiles:
-    df = pd.read_csv(file_,index_col=None, header=0)
-    list_.append(df)
-activities = pd.concat(list_)
-
-activities.to_csv('data/rescuetime-full-data-export.csv',index=False)
 #%%
