@@ -1,0 +1,48 @@
+---
+title: "title"
+subtitle: "subtitle"
+author:
+- Andrii Voitkiv
+date: "`r format(Sys.time(), '%a, %b %d, %Y')`"
+geometry: margin=3cm
+output:
+github_document:
+html_preview: false
+math_method: webtex
+toc: true
+toc_depth: 2
+#bibliography: rmarkdown.bib
+header-includes:
+\usepackage{fvextra}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{breaklines,commandchars=\\\{\}}
+\usepackage[nottoc]{tocbibind}
+---
+
+```{r global_options echo=FALSE}
+knitr::opts_chunk(fig.path = 'Figs/')
+```
+
+```{r}
+library(tidyverse)
+library(plotly)
+colors <- read.csv("/Users/berg/DataspellProjects/MDSA-UofC/DATA605/04_datathon/data/colors_v21.csv")
+#convert hex to rgb
+colors <- colors %>%
+  mutate(hex = paste0("#", rgb),
+         # alpha = ifelse(is_trans == 't', 0.8, 0),
+         rgb = toRGB(hex)) %>%
+  separate(rgb, into=c('prefix','r','g','b','alp'), sep = "\\(|,|\\)") %>%
+  mutate(rgb = paste(r, g, b, sep=',')
+         #hsv = rgb2hsv(rgb)
+  )
+```
+```{r}
+colors_rgb <- colors %>%
+  select(r,g,b) %>% mutate_all(as.numeric)
+colors_hsv <- t(rgb2hsv(t(colors_rgb))) %>% as.data.frame()
+colors <- colors %>% cbind(colors_hsv)
+```
+```{r}
+# Save colors to csv
+write.csv(colors, file = "/Users/berg/DataspellProjects/MDSA-UofC/DATA605/04_datathon/data/colors_processed_v21.csv")
+```
