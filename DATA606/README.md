@@ -13,6 +13,8 @@ Design of surveys and data collection, bias and efficiency of surveys. Sampling 
 - Quadratic discriminant analysis.
 
 [Assignment 3](03_assignment/solutions.md): 
-- 
+- Regression Tree
+- Classification Tree
+- Pruning the Tree
   
 [Project](A.md)
