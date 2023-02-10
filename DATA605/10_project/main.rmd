@@ -1,0 +1,103 @@
+---
+title: "Rescue Time"
+subtitle: "An app to track your computer and mobile phone usage"
+author:
+    - Andrii Voitkiv
+date: "`r format(Sys.time(), '%a, %b %d, %Y')`"
+geometry: margin=3cm
+output:
+    html_document:
+        toc: true
+        toc_float: true
+        toc_depth: 3
+        number_sections: false
+        fig_width: 12
+        fig_height: 8
+        fig_retina: 6
+        fig_path: Figs/
+        keep_md: false
+        theme: united
+        highlight: tango # pygments, kate, espresso, zenburn, haddock, textmate
+
+---
+
+
+```{r global_options, echo=FALSE}
+# Set global options
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, results='asis')
+```
+```{r}
+library('dplyr')
+library('tidyverse')
+```
+_Creating your Story:_
+
+_Structure your data story around a set of exactly 5 clear and explicit analysis questions._
+_For each analysis question, describe the analysis process you used to try to answer it._
+_Provide a concise discussion of your findings, supported by clear charts, statistics, and other analytic results. Include clear, well-captioned images that illustrate your analysis process, findings, and any problems you encountered. Annotating the images with captions, arrows, and notes can be very helpful._
+
+```{r read_data, cache=TRUE}
+# Read data
+RT_mobile <- read.csv("/Users/berg/DataspellProjects/MDSA-UofC/DATA605/10_project/data/rescuetime-minute-grouped-mobile.csv")
+RT_pc <- read.csv("/Users/berg/DataspellProjects/MDSA-UofC/DATA605/10_project/data/rescuetime-minute-grouped-pc.csv")
+```
+```{r}
+# Productivity colors from Rescue Time app:----
+Productivity_col <- rgb(red = c(13, 65, 177, 218, 212, 160),
+                        green = c(88, 130, 193, 105, 28, 235),
+                        blue = c(193, 221, 191, 93, 21, 142),
+                        names = c("Very Productive", "Productive", "Neutral",
+                                  "Distracting", "Very Distracting", "Mobile Phone"),
+                        maxColorValue = 255)
+colors <- Productivity_col[c("Productive", "Very Distracting")]
+```
+```{r}
+# Make a ggridges plot using the ggridges package
+library(ggridges)
+library(ggplot2)
+# Use the ggridges package to create a density plot. On x-axis we have the 'hm' variable, which is the hour and minute of the day. On the y-axis use day names. Plot both mobile and pc Duration.
+RT_mobile$weekday <- factor(RT_mobile$weekday, levels = c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"))
+RT_pc$weekday <- factor(RT_pc$weekday, levels = c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"))
+```
+
+
+```{r}
+# Group by
+```
+
+```{r}
+# Combine the two data frames into one data frame with a Device column that I lost during the grouping process
+RT_mobile$Device <- "Mobile"
+RT_pc$Device <- "PC"
+RT_mobile_pc <- rbind(RT_mobile, RT_pc)
+
+```
+```{r}
+# Group by Device, weekday and hm. Summarize Duration with mean
+RT_mobile_pc <- RT_mobile_pc %>%
+  group_by(Device, weekday, hm) %>%
+  summarize(Duration = mean(Duration)) %>%
+  mutate(row = row_number() - 1)
+```
+
+
+
+```{r}
+ggplot(data = RT_mobile_pc, aes(x = row, y = weekday)) +
+  geom_density_ridges(aes(fill = Device, color = Device,  height = Duration),
+                      stat="identity", alpha = 0.75, size = 0.2, scale = 0.9, show.legend = FALSE) +
+  coord_cartesian(clip = "off") +
+  labs(x = "Time of Day", y = NULL, title = "title", subtitle = "subtitle") +
+  theme_minimal(base_family = "Comfortaa")
+
+```
+
+
+```{r}
+# Column names RT_mobile
+colnames(RT_mobile)
+```
+
+```{r}
+```
+
