@@ -37,3 +37,9 @@ vignettes/*.pdf
 
 # R Environment Variables
 .Renviron
+
+# data in DATA605/10_project folder
+DATA605/10_project/data/*.csv
+
+# Credentials
+DATA605/10_project/credentials.json
