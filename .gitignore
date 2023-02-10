@@ -43,3 +43,7 @@ DATA605/10_project/data/*.csv
 
 # Credentials
 DATA605/10_project/credentials.json
+
+# rmd files
+*.rmd
+
