@@ -62,7 +62,7 @@ RT_mobile$Device <- "Mobile"
 RT_pc$Device <- "PC"
 RT_mobile_pc <- rbind(RT_mobile, RT_pc)
 # Make `Device` a factor
-RT_mobile_pc$Device <- factor(RT_mobile_pc$Device, levels = c("Mobile", "PC"))
+RT_mobile_pc$Device <- factor(RT_mobile_pc$Device, levels = c("PC", "Mobile"))
 ```
 
 ```{r}
@@ -101,7 +101,8 @@ RT_mobile_pc_averages <- RT_mobile_pc %>%
   summarize(average = round(mean(Duration))) %>%
   mutate(average_hours = floor(average / 60),
          average_minutes = average %% 60,
-         average_formatted = paste0(average_hours, "h ", average_minutes))
+         average_formatted = paste0(average_hours, "h ", average_minutes)) %>%
+  arrange(Device)
 
 
 # Create a title and subtitle
@@ -143,7 +144,24 @@ ggplot(data = RT_mobile_pc, aes(x = row, y = weekday)) +
 
 ```
 
+```{r, cache=TRUE}
+# Read data
+RT_hourly <- read.csv("/Users/berg/DataspellProjects/MDSA-UofC/DATA605/10_project/data/rescuetime_hourly_20018-2022.csv")
+```
 
+```{r}
+# Make column Device
+# Group by Device, weekday and Productivity. Summarize Duration with sum
+RT_by_weekday <- RT_hourly %>%
+  rename(weekday = day_name, Duration = Seconds) %>%
+  group_by(Device, weekday, Productivity) %>%
+  summarize(Duration = sum(Duration))
+
+# Group by Device and weekday. Summarize Duration with sum
+```
+```{r}
+
+```
 
 
 
