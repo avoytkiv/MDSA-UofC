@@ -4,11 +4,11 @@ subtitle: "An app to track your computer and mobile phone usage"
 author:
     - Andrii Voitkiv
 date: "`r format(Sys.time(), '%a, %b %d, %Y')`"
-geometry: margin=3cm
+geometry: margin=2cm
 output:
     html_document:
         toc: true
-        toc_float: true
+        toc_float: false
         toc_depth: 3
         number_sections: false
         fig_width: 12
@@ -26,10 +26,7 @@ output:
 # Set global options
 knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, results='asis')
 ```
-```{r}
-library('dplyr')
-library('tidyverse')
-```
+
 _Creating your Story:_
 
 _Structure your data story around a set of exactly 5 clear and explicit analysis questions._
@@ -41,6 +38,7 @@ _Provide a concise discussion of your findings, supported by clear charts, stati
 RT_mobile <- read.csv("/Users/berg/DataspellProjects/MDSA-UofC/DATA605/10_project/data/rescuetime-minute-grouped-mobile.csv")
 RT_pc <- read.csv("/Users/berg/DataspellProjects/MDSA-UofC/DATA605/10_project/data/rescuetime-minute-grouped-pc.csv")
 ```
+
 ```{r}
 # Productivity colors from Rescue Time app:----
 Productivity_col <- rgb(red = c(13, 65, 177, 218, 212, 160),
@@ -51,18 +49,11 @@ Productivity_col <- rgb(red = c(13, 65, 177, 218, 212, 160),
                         maxColorValue = 255)
 colors <- Productivity_col[c("Productive", "Very Distracting")]
 ```
+
 ```{r}
-# Make a ggridges plot using the ggridges package
-library(ggridges)
-library(ggplot2)
 # Use the ggridges package to create a density plot. On x-axis we have the 'hm' variable, which is the hour and minute of the day. On the y-axis use day names. Plot both mobile and pc Duration.
 RT_mobile$weekday <- factor(RT_mobile$weekday, levels = c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"))
 RT_pc$weekday <- factor(RT_pc$weekday, levels = c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"))
-```
-
-
-```{r}
-# Group by
 ```
 
 ```{r}
@@ -70,34 +61,77 @@ RT_pc$weekday <- factor(RT_pc$weekday, levels = c("Monday", "Tuesday", "Wednesda
 RT_mobile$Device <- "Mobile"
 RT_pc$Device <- "PC"
 RT_mobile_pc <- rbind(RT_mobile, RT_pc)
-
+# Make `Device` a factor
+RT_mobile_pc$Device <- factor(RT_mobile_pc$Device, levels = c("Mobile", "PC"))
 ```
+
 ```{r}
+library(dplyr)
 # Group by Device, weekday and hm. Summarize Duration with mean
 RT_mobile_pc <- RT_mobile_pc %>%
   group_by(Device, weekday, hm) %>%
   summarize(Duration = mean(Duration)) %>%
   mutate(row = row_number() - 1)
 ```
+```{r}
+# Create a vector of breaks for the x-axis
+starttime <- 6
+time_interval <- 5
+breaks <- seq(0, (24 - starttime) * (60 / time_interval) - 1, by = 60 / time_interval)
+
+# Filter data by `row` more than 72 (6 am) = 6 * 12 = 72
+RT_mobile_pc <- RT_mobile_pc %>%
+  filter(row > starttime * (60 / time_interval) - 1)
+
+# Update row variable to start from 0
+RT_mobile_pc$row <- RT_mobile_pc$row - starttime * (60 / time_interval)
+```
+
 
 
 
 ```{r}
+# Make a ggridges plot using the ggridges package
+library(ggridges)
+library(ggplot2)
+library(ggtext)
+
+# Create a title and subtitle
+title <- paste0("Time spent on <span style = 'color: ",
+                colors[1], ";'>", levels(RT_mobile_pc$Device)[1],
+                "</span> vs. <span style = 'color: ",
+                colors[2], ";'>", levels(RT_mobile_pc$Device)[2], "</span>")
+subtitle <- paste0("Meausred in minutes by Rescue Time app")
+
+# make the plot:
 ggplot(data = RT_mobile_pc, aes(x = row, y = weekday)) +
   geom_density_ridges(aes(fill = Device, color = Device,  height = Duration),
                       stat="identity", alpha = 0.75, size = 0.2, scale = 0.9, show.legend = FALSE) +
+  labs(x = "Time of Day", y = NULL, title = title, subtitle = subtitle) +
   coord_cartesian(clip = "off") +
-  labs(x = "Time of Day", y = NULL, title = "title", subtitle = "subtitle") +
-  theme_minimal(base_family = "Comfortaa")
+  theme_minimal(base_family = "Comfortaa") +
+  theme(plot.margin = unit(c(2, 22, 2, 2), "mm"),
+        plot.background = element_rect(fill='transparent', color=NA),
+        panel.grid = element_blank(),
+        plot.title.position = "plot",
+        plot.title = element_markdown(face = "bold", size = 15, hjust = 0, color = "grey10"),
+        plot.subtitle = element_markdown(size = 11, hjust = 0, color = "grey20", margin = margin(b = 20)),
+        axis.title.x = element_text(face = "bold", margin = margin(t = 6), color = "grey40", size = 10),
+        axis.text.x = element_text(size = 8, color = "grey50", margin = margin(t = 5)),
+        axis.text.y = element_text(size = 10, color = "grey30", margin = margin(r = 5), vjust = 0),
+        axis.ticks.x = element_line(color = "grey60", linewidth = 0.2)) +
+  scale_x_continuous(expand = c(0, 0), breaks = breaks, labels = RT_mobile_pc$hm[breaks + 1]) +
+  scale_y_discrete(expand = c(0,0)) +
+  scale_fill_manual(values = hsv(h = rgb2hsv(col2rgb(colors))[1,],
+                                 s = rgb2hsv(col2rgb(colors))[2,],
+                                 v = rgb2hsv(col2rgb(colors))[3,])) +
+  scale_color_manual(values = hsv(h = rgb2hsv(col2rgb(colors))[1,],
+                                  s = rgb2hsv(col2rgb(colors))[2,],
+                                  v = rgb2hsv(col2rgb(colors))[3,] - 0.1))
 
 ```
 
 
-```{r}
-# Column names RT_mobile
-colnames(RT_mobile)
-```
 
-```{r}
-```
+
 
