@@ -35,6 +35,8 @@ font <- "Comfortaa"
 library(png)
 library(grid)
 logo <- readPNG("/Users/berg/DataspellProjects/MDSA-UofC/DATA605/10_project/logo.png")
+# icons
+img_path <- "/Users/berg/DataspellProjects/MDSA-UofC/DATA605/10_project/icons"
 
 add.logo <- function(p, img, plot_w_cm = NA, plot_h_cm = NA, logo_w_px = 50){
 
@@ -326,7 +328,8 @@ RT_by_hour <- RT_hourly %>%
 ```
 <img src="/Users/berg/DataspellProjects/MDSA-UofC/DATA605/10_project/animation.gif"/>
 
-## Review
+## Review {.tabset}
+### Calendar of how much time I spent
 ```{r}
 # Group by Date. Summarize by Duration. First, convert Date from "%Y-%m-%d %H:%M:%S" to "%Y-%m-%d"
 RT_by_date <- RT_hourly %>%
@@ -344,7 +347,44 @@ library(r2d3)
 r2d3(data = RT_by_date, d3_version = 4, container = "div", options = list(start = 2018, end = 2023), script = "/Users/berg/DataspellProjects/MDSA-UofC/DATA605/10_project/calendar.js")
 ```
 
-## Categories
+### How productive was that time
+```{r}
+# Group by Date. Summarize by Duration. First, convert Date from "%Y-%m-%d %H:%M:%S" to "%Y-%m-%d"
+RT_by_date_productivity_temp <- RT_hourly %>%
+  mutate(Date = as.Date(paste(year, month, dom, sep = "-"), format = "%Y-%m-%d")) %>%
+  group_by(Date, Productivity) %>%
+  summarize(Duration = sum(Duration) / length_days / 60) %>%
+    mutate(Productivity = case_when(
+        Productivity == 2 ~ "Productive",
+        Productivity == 1 ~ "Productive",
+        Productivity == 0 ~ "Not Productive",
+        Productivity == -1 ~ "Not Productive",
+        Productivity == -2 ~ "Not Productive"),
+             Productivity = factor(Productivity, levels = c("Productive", "Not Productive"))
+    ) %>%
+    group_by(Date, Productivity) %>%
+    summarize(Duration = sum(Duration))
+
+# Find fraction of productive time per day and filter out days with no productive time
+RT_by_date_productivity <- RT_by_date_productivity_temp %>%
+  group_by(Date) %>%
+  mutate(Fraction = Duration / sum(Duration)) %>%
+  filter(Productivity == "Productive")
+
+```
+
+```{r}
+min(RT_by_date_productivity$Fraction)
+max(RT_by_date_productivity$Fraction)
+```
+
+```{r}
+r2d3(data = RT_by_date_productivity, d3_version = 4, container = "div", options = list(start = 2018, end = 2023), script = "/Users/berg/DataspellProjects/MDSA-UofC/DATA605/10_project/calendar-productivity.js")
+```
+
+
+
+# Categories
 ```{r}
 # Group by Category and Productivity. Summarize by Duration
 RT_by_category <- RT_hourly %>%
