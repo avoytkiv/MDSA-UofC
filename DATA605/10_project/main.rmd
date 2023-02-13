@@ -358,14 +358,15 @@ RT_by_category <- RT_hourly %>%
     Productivity == -2 ~ "Very Distracting"),
          Productivity = factor(Productivity, levels = c("Very Productive", "Productive", "Neutral", "Distracting", "Very Distracting")),
          Category = factor(Category, levels = c("Business", "Communication & Scheduling", "Design & Composition", "Entertainment", "iOS Device", "News & Opinion","Reference & Learning", "Shopping", "Social Networking", "Software Development", "Uncategorized", "Utilities")),
-         Total_Duartion = sum(Duration)
+         Total_Duration = sum(Duration)
   )
 
-nhours <- length_days * sum(RT_by_category$Duration) / 60
+# Arrange by Total Duration in descending order
+RT_by_category <- RT_by_category %>%
+  arrange(desc(Total_Duration))
 ```
 
 ```{r}
-
 make.donut <- function(df, category){
 
   subset <- df %>%
@@ -382,7 +383,7 @@ make.donut <- function(df, category){
   text(0, -0.9, labels = category, font = 2, col = "grey20",
        cex = 1, adj=c(0.5, 1), xpd = TRUE)
   # print(round(unique(subset$Total_Min_Duration)))
-  text(0, -1, paste0("\n(", round(unique(subset$Total_Duartion)), " min/day)"),
+  text(0, -1, paste0("\n(", round(unique(subset$Total_Duration)), " min/day)"),
        col = "grey20", cex = 1, adj=c(0.5, 1), xpd = TRUE)
 }
 
@@ -410,8 +411,14 @@ legend(0.5, 0.5, legend = levels(RT_by_category$Productivity),
        border = "transparent", ncol=2,
        cex = 1.2, xjust = 0.5, yjust = 0.5, bty = "n", xpd = TRUE)
 
+#
+ordered_cats <- RT_by_category %>%
+  group_by(Category) %>%
+  summarize(Total_Duration = sum(Total_Duration)) %>%
+  arrange(desc(Total_Duration)) %>%
+  pull(Category)
 # then add the individual donut plots:
-walk(levels(RT_by_category$Category), function(Category){
+walk(ordered_cats, function(Category){
   # image <- readPNG(file.path(img_path, paste0(
   #   gsub(" .*$", "", Overview), ".png")))
 
