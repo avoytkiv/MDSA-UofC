@@ -11,7 +11,7 @@ output:
         toc_float: false
         toc_depth: 3
         number_sections: false
-        fig_width: 12
+        fig_width: 16
         fig_height: 8
         fig_retina: 6
         fig_path: Figs/
@@ -287,7 +287,23 @@ RT_by_hour <- RT_hourly %>%
 <img src="/Users/berg/DataspellProjects/MDSA-UofC/DATA605/10_project/animation.gif"/>
 
 ## Review
+```{r}
+# Group by Date. Summarize by Duration. First, convert Date from "%Y-%m-%d %H:%M:%S" to "%Y-%m-%d"
+RT_by_date <- RT_hourly %>%
+  mutate(Date = as.Date(paste(year, month, dom, sep = "-"), format = "%Y-%m-%d")) %>%
+  group_by(Date) %>%
+  summarize(Duration = sum(Duration))
+```
+```{r echo=FALSE}
+# Print Min and Max Duration
+min(RT_by_date$Duration)
+max(RT_by_date$Duration)
 
+```
+```{r}
+library(r2d3)
+r2d3(data = RT_by_date, d3_version = 4, container = "div", options = list(start = 2018, end = 2023), script = "/Users/berg/DataspellProjects/MDSA-UofC/DATA605/10_project/calendar.js")
+```
 
 
 
