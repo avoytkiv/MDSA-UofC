@@ -30,6 +30,41 @@ knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, results='a
 title_font_size <- 20
 subtitle_font_size <- 14
 font <- "Comfortaa"
+
+# Load logo
+library(png)
+library(grid)
+logo <- readPNG("/Users/berg/DataspellProjects/MDSA-UofC/DATA605/10_project/logo.png")
+
+add.logo <- function(p, img, plot_w_cm = NA, plot_h_cm = NA, logo_w_px = 50){
+
+  if(is.na(plot_w_cm)){
+    plot_w_cm <- dev.size("cm")[1]
+  }
+  if(is.na(plot_h_cm)){
+    plot_h_cm <- dev.size("cm")[2]
+  }
+
+  gt <- ggplotGrob(p)
+  gb <- ggplot_build(p)
+
+  panel_pos <- gt$layout[which(gt$layout$name == "panel"), ]
+  top_mar <- convertUnit(gb$plot$theme$plot.margin[1], "mm", valueOnly=TRUE)
+  right_mar <- convertUnit(gb$plot$theme$plot.margin[2], "mm", valueOnly=TRUE)
+  panel_w <- sum(gt$widths) - right_mar
+  panel_h <- sum(gt$heights) - top_mar
+  logo_w <- as.numeric(logo_w_px)
+  logo_h <- logo_w * dim(logo)[1]/dim(logo)[2]
+  logo <- rasterGrob(readPNG(img),
+                     x = unit(panel_w - logo_w, "mm"),
+                     y = unit(panel_h - logo_h, "mm"),
+                     width = unit(logo_w, "px"),
+                     height = unit(logo_h, "px"),
+                     hjust = 1, vjust=1,
+                     interpolate=TRUE)
+
+  p + annotation_custom(logo)
+}
 ```
 
 _Creating your Story:_
@@ -147,7 +182,9 @@ ggplot(data = RT_mobile_pc, aes(x = row, y = weekday)) +
                                   s = rgb2hsv(col2rgb(colors))[2,],
                                   v = rgb2hsv(col2rgb(colors))[3,] - 0.1))
 
+# add.logo(plot1, "/Users/berg/DataspellProjects/MDSA-UofC/DATA605/10_project/logo.png", 0.1, 0.1, 50)
 ```
+
 
 ## Productivity per day of the week and time of day {.tabset}
 ### Productivity per day of the week {.tabset}
@@ -216,7 +253,9 @@ ggplot(data = RT_by_weekday_merged, aes(x = weekday, y = Avg_Duration, fill = Pr
         axis.title.x = element_text(face = "bold", margin = margin(t = 6), color = "grey40", size = 10),
         axis.ticks.x = element_line(color = "grey60", size = 0.1),
         axis.title.y = element_text(face = "bold", color = "grey40", size = 10),
-        axis.text.x = element_text(size = 10, color = "grey50", margin = margin(t = 2)))
+        axis.text.x = element_text(size = 10, color = "grey50", margin = margin(t = 2))) +
+  annotation_custom(grid::rasterGrob(logo, width=unit(0.2, "npc"), height=unit(0.2, "npc")),
+                    xmin = Inf, xmax = Inf, ymin = Inf, ymax = Inf)
 
 ```
 
