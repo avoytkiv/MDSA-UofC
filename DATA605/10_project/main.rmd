@@ -264,6 +264,7 @@ ggplot(data = RT_by_weekday_merged, aes(x = weekday, y = Avg_Duration, fill = Pr
 start_date <- as.Date("2018-01-01")
 end_date <- as.Date("2022-12-31")
 unique_hours <- as.numeric(difftime(end_date, start_date, units = "hours")) / 24
+length_days <- as.numeric(difftime(end_date, start_date, units = "days"))
 
 
 RT_by_hour <- RT_hourly %>%
@@ -333,15 +334,90 @@ RT_by_date <- RT_hourly %>%
   group_by(Date) %>%
   summarize(Duration = sum(Duration))
 ```
-```{r echo=FALSE}
+```{r echo=FALSE, message=FALSE, warning=FALSE}
 # Print Min and Max Duration
-min(RT_by_date$Duration)
-max(RT_by_date$Duration)
-
+min_duration <- min(RT_by_date$Duration)
+max_duration <- max(RT_by_date$Duration)
 ```
 ```{r}
 library(r2d3)
 r2d3(data = RT_by_date, d3_version = 4, container = "div", options = list(start = 2018, end = 2023), script = "/Users/berg/DataspellProjects/MDSA-UofC/DATA605/10_project/calendar.js")
+```
+
+## Categories
+```{r}
+# Group by Category and Productivity. Summarize by Duration
+RT_by_category <- RT_hourly %>%
+  group_by(Category, Productivity) %>%
+  summarize(Duration = sum(Duration) / length_days / 60) %>%
+  mutate(Productivity = case_when(
+    Productivity == 2 ~ "Very Productive",
+    Productivity == 1 ~ "Productive",
+    Productivity == 0 ~ "Neutral",
+    Productivity == -1 ~ "Distracting",
+    Productivity == -2 ~ "Very Distracting"),
+         Productivity = factor(Productivity, levels = c("Very Productive", "Productive", "Neutral", "Distracting", "Very Distracting")),
+         Category = factor(Category, levels = c("Business", "Communication & Scheduling", "Design & Composition", "Entertainment", "iOS Device", "News & Opinion","Reference & Learning", "Shopping", "Social Networking", "Software Development", "Uncategorized", "Utilities")),
+         Total_Duartion = sum(Duration)
+  )
+
+nhours <- length_days * sum(RT_by_category$Duration) / 60
+```
+
+```{r}
+
+make.donut <- function(df, category){
+
+  subset <- df %>%
+    filter(Category == category) %>%
+    mutate(fraction = Duration / sum(Duration))
+
+  par(mar = c(2, 0, 0, 0), xaxs = "i", yaxs = "i", family = "Comfortaa")
+
+  pie(subset$fraction, clockwise = TRUE,
+      col = Productivity_col[-6][unique(as.character(subset$Productivity))],
+      border = "white",labels = NA, xlim = c(-0.7, 0.7), ylim = c(-0.7, 0.7))
+  symbols(0,0, circles = 0.35, fg = "white", bg = "white",
+          add = TRUE, inches = FALSE)
+  text(0, -0.9, labels = category, font = 2, col = "grey20",
+       cex = 1, adj=c(0.5, 1), xpd = TRUE)
+  # print(round(unique(subset$Total_Min_Duration)))
+  text(0, -1, paste0("\n(", round(unique(subset$Total_Duartion)), " min/day)"),
+       col = "grey20", cex = 1, adj=c(0.5, 1), xpd = TRUE)
+}
+
+h_title <- 1.5
+h_legend <- 1.8
+
+layout(matrix(c(rep(1, 4), rep(2, 4), 3:14), nrow = 5, ncol =  4, byrow = TRUE),
+       heights = lcm(c(h_title, h_legend)))
+
+# first plot is a title + subtitle
+par(mar = c(0, 0, 0, 0), family = "Comfortaa")
+plot.new()
+text(0, 1, "Productivity pulse of the 12 main Categories",
+     adj = c(0, 1.1), col = "grey20", font = 2, cex = 2, xpd = TRUE)
+text(0, 0, paste0("Measured with RescueTime (", length_days, " days)"),
+     adj = c(0, -0.1), col = "grey30", cex = 1.5, xpd = TRUE)
+
+# second plot is the legend:
+par(mar = c(0, 0, 0, 0))
+plot.new()
+legend(0.5, 0.5, legend = levels(RT_by_category$Productivity),
+       fill = Productivity_col[levels(RT_by_category$Productivity)],
+       title.adj = 0, title.col = "grey20",
+       y.intersp = 1.2, text.col = "grey30",
+       border = "transparent", ncol=2,
+       cex = 1.2, xjust = 0.5, yjust = 0.5, bty = "n", xpd = TRUE)
+
+# then add the individual donut plots:
+walk(levels(RT_by_category$Category), function(Category){
+  # image <- readPNG(file.path(img_path, paste0(
+  #   gsub(" .*$", "", Overview), ".png")))
+
+  make.donut(df = RT_by_category, category = Category)
+  # rasterImage(image, xleft = -0.5, xright = 0.5, ybottom = -0.5, ytop = 0.5)
+})
 ```
 
 
