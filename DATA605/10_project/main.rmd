@@ -221,7 +221,63 @@ ggplot(data = RT_by_weekday_merged, aes(x = weekday, y = Avg_Duration, fill = Pr
 ```
 
 ### Productivity per time of day {.tabset}
+```{r}
+start_date <- as.Date("2019-01-01")
+end_date <- as.Date("2022-12-31")
+unique_hours <- as.numeric(difftime(end_date, start_date, units = "hours")) / 24
 
+
+RT_by_hour <- RT_hourly %>%
+  group_by(hour, Productivity) %>%
+  summarize(Duration = sum(Duration)) %>%
+  mutate(Productivity = case_when(
+    Productivity == 2 ~ "Very Productive",
+    Productivity == 1 ~ "Productive",
+    Productivity == 0 ~ "Neutral",
+    Productivity == -1 ~ "Distracting",
+    Productivity == -2 ~ "Very Distracting"),
+         Avg_Duration = Duration / unique_hours / 60,
+         Avg_Duration = if_else(Productivity %in% c("Distracting", "Very Distracting"), -Avg_Duration, Avg_Duration))
+
+```
+
+
+```{r}
+# TODO: Check how I calculate the unique hours
+# Create a title and subtitle
+label <- sub(",([^,]*)$", " and\\1", paste0("<span style='font-size:8pt;'>",
+                                            paste(imap_chr(Productivity_col[-c(4:6)], function(color, name){
+                                              paste0("<span style='color:", color, ";'>", name, "</span>")
+                                            }), collapse = ", "), " time are shown as positive values. <br>",
+                                            paste(imap_chr(Productivity_col[c(5,4)], function(color, name){
+                                              paste0("<span style='color:", color, ";'>", name, "</span>")
+                                            }), collapse = " and "), " time are shown as negative values. </span>"))
+title <- paste0("Productivity by Hour of the Day")
+subtitle <- paste0("Meausred in minutes by Rescue Time app")
+
+# Make the plot
+ggplot(data = RT_by_hour, aes(x = hour, y = Avg_Duration, fill = Productivity)) +
+  geom_bar(stat = "identity", position = "stack") +
+  labs(x = "Day of the Week", y = "Time Spent (minutes)", title = title, subtitle = paste0("Measured with RescueTime <br>
+                         <br>", label)) +
+  theme_minimal(base_family = "Comfortaa") +
+  scale_fill_manual(values = Productivity_col) +
+  coord_cartesian(clip = "off") +
+  theme(plot.margin = unit(c(2, 2, 2, 2), "mm"),
+        panel.grid.major.y = element_line(color = "grey90", size = 0.2),
+        panel.grid.minor.x = element_blank(),
+        panel.grid.major.x = element_blank(),
+        legend.position = "none",
+        plot.title.position = "plot",
+        plot.title = element_markdown(face = "bold", size = title_font_size, hjust = 0, color="grey10"),
+        plot.subtitle = element_markdown(size = subtitle_font_size, hjust = 0, color="grey20"),
+        axis.text.y = element_text(size=10, color = "grey30"),
+        axis.title.x = element_text(face = "bold", margin = margin(t = 6), color = "grey40", size = 10),
+        axis.ticks.x = element_line(color = "grey60", size = 0.1),
+        axis.title.y = element_text(face = "bold", color = "grey40", size = 10),
+        axis.text.x = element_text(size = 10, color = "grey50", margin = margin(t = 2))) +
+  scale_x_continuous(breaks= 0:23 - 0.5, labels = paste0(0:23, ":00"), expand = c(0.01, 0.01))
+```
 
 
 
