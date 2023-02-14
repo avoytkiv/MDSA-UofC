@@ -108,6 +108,9 @@ print(paste("The sample size is:", sum(strata_size)))
 print(strata_size)
 ```
 ```{r}
+table(data$main_category)
+```
+```{r}
 library("sampling")
 set.seed(2023)
 # Sampling strata_size observations from each stratum with simple random sampling
