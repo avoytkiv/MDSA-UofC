@@ -1,0 +1,17 @@
+.infobox {
+  padding: 1em 1em 1em 4em;
+  margin-bottom: 10px;
+  /* border: 2px solid orange; */
+  border-radius: 10px;
+  background: #FFF8E1 5px center/3em no-repeat;
+}
+
+.caution {
+  background-image: url("images/note.png");
+}
+
+.warning {
+  background-image: url("images/warning.png");
+}
+
+/* Path: DATA605/10_project/style.css */
