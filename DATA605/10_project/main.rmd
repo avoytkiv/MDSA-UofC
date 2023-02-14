@@ -21,7 +21,7 @@ output:
 
 ---
 
-
+<img src="/Users/berg/DataspellProjects/MDSA-UofC/DATA605/10_project/wallpaper.jpg"/>
 ```{r global_options, echo=FALSE}
 # Set global options
 knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, results='asis')
@@ -81,6 +81,18 @@ RT_mobile <- read.csv("/Users/berg/DataspellProjects/MDSA-UofC/DATA605/10_projec
 RT_pc <- read.csv("/Users/berg/DataspellProjects/MDSA-UofC/DATA605/10_project/data/rescuetime-minute-grouped-pc.csv")
 ```
 
+```{r, cache=TRUE}
+# Read data
+RT_hourly <- read.csv("/Users/berg/DataspellProjects/MDSA-UofC/DATA605/10_project/data/rescuetime_hourly_20018-2022.csv")
+```
+
+```{r}
+start_date <- as.Date("2018-01-01")
+end_date <- as.Date("2022-12-31")
+unique_hours <- as.numeric(difftime(end_date, start_date, units = "hours")) / 24
+length_days <- as.numeric(difftime(end_date, start_date, units = "days"))
+```
+
 ```{r}
 # Productivity colors from Rescue Time app:----
 Productivity_col <- rgb(red = c(13, 65, 177, 218, 212, 160),
@@ -128,261 +140,6 @@ RT_mobile_pc <- RT_mobile_pc %>%
 # Update row variable to start from 0
 RT_mobile_pc$row <- RT_mobile_pc$row - starttime * (60 / time_interval)
 ```
-
-
-
-
-```{r}
-# Make a ggridges plot using the ggridges package
-library(ggridges)
-library(ggplot2)
-library(ggtext)
-
-RT_mobile_pc_averages <- RT_mobile_pc %>%
-  group_by(weekday, Device) %>%
-  summarize(average = round(mean(Duration))) %>%
-  mutate(average_hours = floor(average / 60),
-         average_minutes = average %% 60,
-         average_formatted = paste0(average_hours, "h ", average_minutes)) %>%
-  arrange(Device)
-
-
-# Create a title and subtitle
-title <- paste0("Time spent on <span style = 'color: ",
-                colors[1], ";'>", levels(RT_mobile_pc$Device)[1],
-                "</span> vs. <span style = 'color: ",
-                colors[2], ";'>", levels(RT_mobile_pc$Device)[2], "</span>")
-subtitle <- paste0("Meausred in minutes by Rescue Time app")
-
-# make the plot:
-ggplot(data = RT_mobile_pc, aes(x = row, y = weekday)) +
-  geom_density_ridges(aes(fill = Device, color = Device,  height = Duration),
-                      stat="identity", alpha = 0.75, size = 0.2, scale = 0.9, show.legend = FALSE) +
-  geom_text(data = RT_mobile_pc_averages, aes(x= (24 - starttime) * (12 + 1/4), y = c(1:7 + 0.5, 1:7 + 0.2),
-                               label = paste(average_formatted,  "/day"),
-                               hjust = 0, vjust = 0, family = font, color = Device),
-            show.legend = FALSE, size = 3.5) +
-  labs(x = "Time of Day", y = NULL, title = title, subtitle = subtitle) +
-  coord_cartesian(clip = "off") +
-  theme_minimal(base_family = font) +
-  theme(plot.margin = unit(c(2, 22, 2, 2), "mm"),
-        plot.background = element_rect(fill='transparent', color=NA),
-        panel.grid = element_blank(),
-        plot.title.position = "plot",
-        plot.title = element_markdown(face = "bold", size = title_font_size, hjust = 0, color = "grey10"),
-        plot.subtitle = element_markdown(size = subtitle_font_size, hjust = 0, color = "grey20", margin = margin(b = 20)),
-        axis.title.x = element_text(face = "bold", margin = margin(t = 6), color = "grey40", size = 10),
-        axis.text.x = element_text(size = 8, color = "grey50", margin = margin(t = 5)),
-        axis.text.y = element_text(size = 10, color = "grey30", margin = margin(r = 5), vjust = 0),
-        axis.ticks.x = element_line(color = "grey60", linewidth = 0.2)) +
-  scale_x_continuous(expand = c(0, 0), breaks = breaks, labels = RT_mobile_pc$hm[breaks + 1]) +
-  scale_y_discrete(expand = c(0,0)) +
-  scale_fill_manual(values = hsv(h = rgb2hsv(col2rgb(colors))[1,],
-                                 s = rgb2hsv(col2rgb(colors))[2,],
-                                 v = rgb2hsv(col2rgb(colors))[3,])) +
-  scale_color_manual(values = hsv(h = rgb2hsv(col2rgb(colors))[1,],
-                                  s = rgb2hsv(col2rgb(colors))[2,],
-                                  v = rgb2hsv(col2rgb(colors))[3,] - 0.1))
-
-# add.logo(plot1, "/Users/berg/DataspellProjects/MDSA-UofC/DATA605/10_project/logo.png", 0.1, 0.1, 50)
-```
-
-
-## Productivity per day of the week and time of day {.tabset}
-### Productivity per day of the week {.tabset}
-```{r, cache=TRUE}
-# Read data
-RT_hourly <- read.csv("/Users/berg/DataspellProjects/MDSA-UofC/DATA605/10_project/data/rescuetime_hourly_20018-2022.csv")
-```
-
-```{r}
-RT_by_weekday <- RT_hourly %>%
-  group_by(weekday, Productivity) %>%
-  summarize(Duration = sum(Duration)) %>%
-  mutate(Productivity = case_when(
-           Productivity == 2 ~ "Very Productive",
-           Productivity == 1 ~ "Productive",
-           Productivity == 0 ~ "Neutral",
-           Productivity == -1 ~ "Distracting",
-           Productivity == -2 ~ "Very Distracting"
-  )
-  )
-
-RT_by_weekday_count <- RT_hourly %>%
-  group_by(weekday) %>%
-  summarize(count = n_distinct(as.Date(paste(year, month, dom, sep = "-"), format = "%Y-%m-%d")))
-
-RT_by_weekday_merged <- left_join(RT_by_weekday, RT_by_weekday_count, by = "weekday")
-
-RT_by_weekday_merged <- RT_by_weekday_merged %>%
-  mutate(weekday = factor(weekday, levels = c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")),
-         Avg_Duration = Duration / count / 3600,
-         Avg_Duration = if_else(Productivity %in% c("Distracting", "Very Distracting"), -Avg_Duration, Avg_Duration))
-
-```
-
-```{r}
-library('tidyverse')
-# Create a title and subtitle
-label <- sub(",([^,]*)$", " and\\1", paste0("<span style='font-size:8pt;'>",
-                                            paste(imap_chr(Productivity_col[-c(4:6)], function(color, name){
-                                              paste0("<span style='color:", color, ";'>", name, "</span>")
-                                            }), collapse = ", "), " time are shown as positive values. <br>",
-                                            paste(imap_chr(Productivity_col[c(5,4)], function(color, name){
-                                              paste0("<span style='color:", color, ";'>", name, "</span>")
-                                            }), collapse = " and "), " time are shown as negative values. </span>"))
-
-title <- paste0("Productivity by Day of the Week")
-subtitle <- paste0("Meausred in minutes by Rescue Time app")
-
-# Make the plot
-ggplot(data = RT_by_weekday_merged, aes(x = weekday, y = Avg_Duration, fill = Productivity)) +
-  geom_bar(stat = "identity", position = "stack") +
-  labs(x = "Day of the Week", y = "Time Spent (hours)", title = title, subtitle = paste0("Measured with RescueTime <br>
-                         <br>", label)) +
-  theme_minimal(base_family = "Comfortaa") +
-  scale_fill_manual(values = Productivity_col) +
-  coord_cartesian(clip = "off") +
-  theme(plot.margin = unit(c(2, 2, 2, 2), "mm"),
-        panel.grid.major.y = element_line(color = "grey90", size = 0.2),
-        panel.grid.minor.x = element_blank(),
-        panel.grid.major.x = element_blank(),
-        legend.position = "none",
-        plot.title.position = "plot",
-        plot.title = element_markdown(face = "bold", size = title_font_size, hjust = 0, color="grey10"),
-        plot.subtitle = element_markdown(size = subtitle_font_size, hjust = 0, color="grey20"),
-        axis.text.y = element_text(size=10, color = "grey30"),
-        axis.title.x = element_text(face = "bold", margin = margin(t = 6), color = "grey40", size = 10),
-        axis.ticks.x = element_line(color = "grey60", size = 0.1),
-        axis.title.y = element_text(face = "bold", color = "grey40", size = 10),
-        axis.text.x = element_text(size = 10, color = "grey50", margin = margin(t = 2))) +
-  annotation_custom(grid::rasterGrob(logo, width=unit(0.2, "npc"), height=unit(0.2, "npc")),
-                    xmin = Inf, xmax = Inf, ymin = Inf, ymax = Inf)
-
-```
-
-### Productivity per time of day {.tabset}
-```{r}
-start_date <- as.Date("2018-01-01")
-end_date <- as.Date("2022-12-31")
-unique_hours <- as.numeric(difftime(end_date, start_date, units = "hours")) / 24
-length_days <- as.numeric(difftime(end_date, start_date, units = "days"))
-
-
-RT_by_hour <- RT_hourly %>%
-  group_by(hour, Productivity) %>%
-  summarize(Duration = sum(Duration)) %>%
-  mutate(Productivity = case_when(
-    Productivity == 2 ~ "Very Productive",
-    Productivity == 1 ~ "Productive",
-    Productivity == 0 ~ "Neutral",
-    Productivity == -1 ~ "Distracting",
-    Productivity == -2 ~ "Very Distracting"),
-         Avg_Duration = Duration / unique_hours / 60,
-         Avg_Duration = if_else(Productivity %in% c("Distracting", "Very Distracting"), -Avg_Duration, Avg_Duration))
-
-```
-
-
-```{r}
-# # TODO: Check how I calculate the unique hours
-# # Create a title and subtitle
-# label <- sub(",([^,]*)$", " and\\1", paste0("<span style='font-size:8pt;'>",
-#                                             paste(imap_chr(Productivity_col[-c(4:6)], function(color, name){
-#                                               paste0("<span style='color:", color, ";'>", name, "</span>")
-#                                             }), collapse = ", "), " time are shown as positive values. <br>",
-#                                             paste(imap_chr(Productivity_col[c(5,4)], function(color, name){
-#                                               paste0("<span style='color:", color, ";'>", name, "</span>")
-#                                             }), collapse = " and "), " time are shown as negative values. </span>"))
-# title <- paste0("Productivity by Hour of the Day")
-# subtitle <- paste0("Meausred in minutes by Rescue Time app")
-#
-# # Make the plot
-# p <- ggplot(data = RT_by_hour, aes(x = hour, y = Avg_Duration, fill = Productivity)) +
-#   geom_bar(stat = "identity", position = "stack") +
-#   labs(x = "Hour of the Day", y = "Time Spent (minutes)", title = title, subtitle = paste0("Measured with RescueTime <br>
-#                          <br>", label)) +
-#   theme_minimal(base_family = "Comfortaa") +
-#   scale_fill_manual(values = Productivity_col) +
-#   coord_cartesian(clip = "off") +
-#   theme(plot.margin = unit(c(2, 2, 2, 2), "mm"),
-#         panel.grid.major.y = element_line(color = "grey90", size = 0.2),
-#         panel.grid.minor.x = element_blank(),
-#         panel.grid.major.x = element_blank(),
-#         legend.position = "none",
-#         plot.title.position = "plot",
-#         plot.title = element_markdown(face = "bold", size = title_font_size, hjust = 0, color="grey10"),
-#         plot.subtitle = element_markdown(size = subtitle_font_size, hjust = 0, color="grey20"),
-#         axis.text.y = element_text(size=10, color = "grey30"),
-#         axis.title.x = element_text(face = "bold", margin = margin(t = 6), color = "grey40", size = 10),
-#         axis.ticks.x = element_line(color = "grey60", size = 0.1),
-#         axis.title.y = element_text(face = "bold", color = "grey40", size = 10),
-#         axis.text.x = element_text(size = 10, color = "grey50", margin = margin(t = 2))) +
-#   scale_x_continuous(breaks= 0:23 - 0.5, labels = paste0(0:23, ":00"), expand = c(0.01, 0.01))
-
-# # Make the animation
-# library(gganimate)
-# library(gifski)
-# animation <- p + transition_states(hour, transition_length = 2, state_length = 1, wrap = FALSE) + shadow_mark() #+ enter_fade() + exit_shrink()
-# anim_save("/Users/berg/DataspellProjects/MDSA-UofC/DATA605/10_project/animation.gif", animation, width = 1200, height = 800, renderer = gifski_renderer())
-```
-<img src="/Users/berg/DataspellProjects/MDSA-UofC/DATA605/10_project/animation.gif"/>
-
-## Review {.tabset}
-### Calendar of how much time I spent
-```{r}
-# Group by Date. Summarize by Duration. First, convert Date from "%Y-%m-%d %H:%M:%S" to "%Y-%m-%d"
-RT_by_date <- RT_hourly %>%
-  mutate(Date = as.Date(paste(year, month, dom, sep = "-"), format = "%Y-%m-%d")) %>%
-  group_by(Date) %>%
-  summarize(Duration = sum(Duration))
-```
-```{r echo=FALSE, message=FALSE, warning=FALSE}
-# Print Min and Max Duration
-min_duration <- min(RT_by_date$Duration)
-max_duration <- max(RT_by_date$Duration)
-```
-```{r}
-library(r2d3)
-r2d3(data = RT_by_date, d3_version = 4, container = "div", options = list(start = 2018, end = 2023), script = "/Users/berg/DataspellProjects/MDSA-UofC/DATA605/10_project/calendar.js")
-```
-
-### How productive was that time
-```{r}
-# Group by Date. Summarize by Duration. First, convert Date from "%Y-%m-%d %H:%M:%S" to "%Y-%m-%d"
-RT_by_date_productivity_temp <- RT_hourly %>%
-  mutate(Date = as.Date(paste(year, month, dom, sep = "-"), format = "%Y-%m-%d")) %>%
-  group_by(Date, Productivity) %>%
-  summarize(Duration = sum(Duration) / length_days / 60) %>%
-    mutate(Productivity = case_when(
-        Productivity == 2 ~ "Productive",
-        Productivity == 1 ~ "Productive",
-        Productivity == 0 ~ "Not Productive",
-        Productivity == -1 ~ "Not Productive",
-        Productivity == -2 ~ "Not Productive"),
-             Productivity = factor(Productivity, levels = c("Productive", "Not Productive"))
-    ) %>%
-    group_by(Date, Productivity) %>%
-    summarize(Duration = sum(Duration))
-
-# Find fraction of productive time per day and filter out days with no productive time
-RT_by_date_productivity <- RT_by_date_productivity_temp %>%
-  group_by(Date) %>%
-  mutate(Fraction = Duration / sum(Duration)) %>%
-  filter(Productivity == "Productive")
-
-```
-
-```{r}
-min(RT_by_date_productivity$Fraction)
-max(RT_by_date_productivity$Fraction)
-```
-
-```{r}
-r2d3(data = RT_by_date_productivity, d3_version = 4, container = "div", options = list(start = 2018, end = 2023), script = "/Users/berg/DataspellProjects/MDSA-UofC/DATA605/10_project/calendar-productivity.js")
-```
-
-
 
 # Categories
 ```{r}
@@ -458,6 +215,7 @@ ordered_cats <- RT_by_category %>%
   arrange(desc(Total_Duration)) %>%
   pull(Category)
 # then add the individual donut plots:
+library('tidyverse')
 walk(ordered_cats, function(Category){
   # image <- readPNG(file.path(img_path, paste0(
   #   gsub(" .*$", "", Overview), ".png")))
@@ -466,6 +224,249 @@ walk(ordered_cats, function(Category){
   # rasterImage(image, xleft = -0.5, xright = 0.5, ybottom = -0.5, ytop = 0.5)
 })
 ```
+
+## Productivity per day of the week and time of day {.tabset}
+### Productivity per day of the week {.tabset}
+```{r}
+RT_by_weekday <- RT_hourly %>%
+  group_by(weekday, Productivity) %>%
+  summarize(Duration = sum(Duration)) %>%
+  mutate(Productivity = case_when(
+           Productivity == 2 ~ "Very Productive",
+           Productivity == 1 ~ "Productive",
+           Productivity == 0 ~ "Neutral",
+           Productivity == -1 ~ "Distracting",
+           Productivity == -2 ~ "Very Distracting"
+  )
+  )
+
+RT_by_weekday_count <- RT_hourly %>%
+  group_by(weekday) %>%
+  summarize(count = n_distinct(as.Date(paste(year, month, dom, sep = "-"), format = "%Y-%m-%d")))
+
+RT_by_weekday_merged <- left_join(RT_by_weekday, RT_by_weekday_count, by = "weekday")
+
+RT_by_weekday_merged <- RT_by_weekday_merged %>%
+  mutate(weekday = factor(weekday, levels = c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")),
+         Avg_Duration = Duration / count / 3600,
+         Avg_Duration = if_else(Productivity %in% c("Distracting", "Very Distracting"), -Avg_Duration, Avg_Duration))
+
+```
+
+```{r}
+library('tidyverse')
+# Create a title and subtitle
+label <- sub(",([^,]*)$", " and\\1", paste0("<span style='font-size:8pt;'>",
+                                            paste(imap_chr(Productivity_col[-c(4:6)], function(color, name){
+                                              paste0("<span style='color:", color, ";'>", name, "</span>")
+                                            }), collapse = ", "), " time are shown as positive values. <br>",
+                                            paste(imap_chr(Productivity_col[c(5,4)], function(color, name){
+                                              paste0("<span style='color:", color, ";'>", name, "</span>")
+                                            }), collapse = " and "), " time are shown as negative values. </span>"))
+
+title <- paste0("Productivity by Day of the Week")
+subtitle <- paste0("Meausred in minutes by Rescue Time app")
+
+# Make the plot
+library('ggtext')
+ggplot(data = RT_by_weekday_merged, aes(x = weekday, y = Avg_Duration, fill = Productivity)) +
+  geom_bar(stat = "identity", position = "stack") +
+  labs(x = "Day of the Week", y = "Time Spent (hours)", title = title, subtitle = paste0("Measured with RescueTime <br>
+                         <br>", label)) +
+  theme_minimal(base_family = "Comfortaa") +
+  scale_fill_manual(values = Productivity_col) +
+  coord_cartesian(clip = "off") +
+  theme(plot.margin = unit(c(2, 2, 2, 2), "mm"),
+        panel.grid.major.y = element_line(color = "grey90", size = 0.2),
+        panel.grid.minor.x = element_blank(),
+        panel.grid.major.x = element_blank(),
+        legend.position = "none",
+        plot.title.position = "plot",
+        plot.title = element_markdown(face = "bold", size = title_font_size, hjust = 0, color="grey10"),
+        plot.subtitle = element_markdown(size = subtitle_font_size, hjust = 0, color="grey20"),
+        axis.text.y = element_text(size=10, color = "grey30"),
+        axis.title.x = element_text(face = "bold", margin = margin(t = 6), color = "grey40", size = 10),
+        axis.ticks.x = element_line(color = "grey60", size = 0.1),
+        axis.title.y = element_text(face = "bold", color = "grey40", size = 10),
+        axis.text.x = element_text(size = 10, color = "grey50", margin = margin(t = 2))) +
+  annotation_custom(grid::rasterGrob(logo, width=unit(0.2, "npc"), height=unit(0.2, "npc")),
+                    xmin = Inf, xmax = Inf, ymin = Inf, ymax = Inf)
+
+```
+
+### Productivity per time of day {.tabset}
+```{r}
+RT_by_hour <- RT_hourly %>%
+  group_by(hour, Productivity) %>%
+  summarize(Duration = sum(Duration)) %>%
+  mutate(Productivity = case_when(
+    Productivity == 2 ~ "Very Productive",
+    Productivity == 1 ~ "Productive",
+    Productivity == 0 ~ "Neutral",
+    Productivity == -1 ~ "Distracting",
+    Productivity == -2 ~ "Very Distracting"),
+         Avg_Duration = Duration / unique_hours / 60,
+         Avg_Duration = if_else(Productivity %in% c("Distracting", "Very Distracting"), -Avg_Duration, Avg_Duration))
+
+```
+
+
+```{r}
+# # TODO: Check how I calculate the unique hours
+# # Create a title and subtitle
+# label <- sub(",([^,]*)$", " and\\1", paste0("<span style='font-size:8pt;'>",
+#                                             paste(imap_chr(Productivity_col[-c(4:6)], function(color, name){
+#                                               paste0("<span style='color:", color, ";'>", name, "</span>")
+#                                             }), collapse = ", "), " time are shown as positive values. <br>",
+#                                             paste(imap_chr(Productivity_col[c(5,4)], function(color, name){
+#                                               paste0("<span style='color:", color, ";'>", name, "</span>")
+#                                             }), collapse = " and "), " time are shown as negative values. </span>"))
+# title <- paste0("Productivity by Hour of the Day")
+# subtitle <- paste0("Meausred in minutes by Rescue Time app")
+#
+# # Make the plot
+# p <- ggplot(data = RT_by_hour, aes(x = hour, y = Avg_Duration, fill = Productivity)) +
+#   geom_bar(stat = "identity", position = "stack") +
+#   labs(x = "Hour of the Day", y = "Time Spent (minutes)", title = title, subtitle = paste0("Measured with RescueTime <br>
+#                          <br>", label)) +
+#   theme_minimal(base_family = "Comfortaa") +
+#   scale_fill_manual(values = Productivity_col) +
+#   coord_cartesian(clip = "off") +
+#   theme(plot.margin = unit(c(2, 2, 2, 2), "mm"),
+#         panel.grid.major.y = element_line(color = "grey90", size = 0.2),
+#         panel.grid.minor.x = element_blank(),
+#         panel.grid.major.x = element_blank(),
+#         legend.position = "none",
+#         plot.title.position = "plot",
+#         plot.title = element_markdown(face = "bold", size = title_font_size, hjust = 0, color="grey10"),
+#         plot.subtitle = element_markdown(size = subtitle_font_size, hjust = 0, color="grey20"),
+#         axis.text.y = element_text(size=10, color = "grey30"),
+#         axis.title.x = element_text(face = "bold", margin = margin(t = 6), color = "grey40", size = 10),
+#         axis.ticks.x = element_line(color = "grey60", size = 0.1),
+#         axis.title.y = element_text(face = "bold", color = "grey40", size = 10),
+#         axis.text.x = element_text(size = 10, color = "grey50", margin = margin(t = 2))) +
+#   scale_x_continuous(breaks= 0:23 - 0.5, labels = paste0(0:23, ":00"), expand = c(0.01, 0.01))
+
+# # Make the animation
+# library(gganimate)
+# library(gifski)
+# animation <- p + transition_states(hour, transition_length = 2, state_length = 1, wrap = FALSE) + shadow_mark() #+ enter_fade() + exit_shrink()
+# anim_save("/Users/berg/DataspellProjects/MDSA-UofC/DATA605/10_project/animation.gif", animation, width = 1200, height = 800, renderer = gifski_renderer())
+```
+<img src="/Users/berg/DataspellProjects/MDSA-UofC/DATA605/10_project/animation.gif"/>
+
+
+## Review {.tabset}
+### Calendar of how much time I spent
+```{r}
+# Group by Date. Summarize by Duration. First, convert Date from "%Y-%m-%d %H:%M:%S" to "%Y-%m-%d"
+RT_by_date <- RT_hourly %>%
+  mutate(Date = as.Date(paste(year, month, dom, sep = "-"), format = "%Y-%m-%d")) %>%
+  group_by(Date) %>%
+  summarize(Duration = sum(Duration))
+```
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# Print Min and Max Duration
+min_duration <- min(RT_by_date$Duration)
+max_duration <- max(RT_by_date$Duration)
+```
+```{r}
+library(r2d3)
+r2d3(data = RT_by_date, d3_version = 4, container = "div", options = list(start = 2018, end = 2023), script = "/Users/berg/DataspellProjects/MDSA-UofC/DATA605/10_project/calendar.js")
+```
+
+### How productive was that time
+```{r}
+# Group by Date. Summarize by Duration. First, convert Date from "%Y-%m-%d %H:%M:%S" to "%Y-%m-%d"
+RT_by_date_productivity_temp <- RT_hourly %>%
+  mutate(Date = as.Date(paste(year, month, dom, sep = "-"), format = "%Y-%m-%d")) %>%
+  group_by(Date, Productivity) %>%
+  summarize(Duration = sum(Duration) / length_days / 60) %>%
+    mutate(Productivity = case_when(
+        Productivity == 2 ~ "Productive",
+        Productivity == 1 ~ "Productive",
+        Productivity == 0 ~ "Not Productive",
+        Productivity == -1 ~ "Not Productive",
+        Productivity == -2 ~ "Not Productive"),
+             Productivity = factor(Productivity, levels = c("Productive", "Not Productive"))
+    ) %>%
+    group_by(Date, Productivity) %>%
+    summarize(Duration = sum(Duration))
+
+# Find fraction of productive time per day and filter out days with no productive time
+RT_by_date_productivity <- RT_by_date_productivity_temp %>%
+  group_by(Date) %>%
+  mutate(Fraction = Duration / sum(Duration)) %>%
+  filter(Productivity == "Productive")
+
+```
+
+```{r}
+min_prod_fraction <- min(RT_by_date_productivity$Fraction)
+max_prod_fraction <- max(RT_by_date_productivity$Fraction)
+```
+
+```{r}
+r2d3(data = RT_by_date_productivity, d3_version = 4, container = "div", options = list(start = 2018, end = 2023), script = "/Users/berg/DataspellProjects/MDSA-UofC/DATA605/10_project/calendar-productivity.js")
+```
+
+## Mobile vs PC
+```{r}
+# Make a ggridges plot using the ggridges package
+library(ggridges)
+library(ggplot2)
+library(ggtext)
+
+RT_mobile_pc_averages <- RT_mobile_pc %>%
+  group_by(weekday, Device) %>%
+  summarize(average = round(mean(Duration))) %>%
+  mutate(average_hours = floor(average / 60),
+         average_minutes = average %% 60,
+         average_formatted = paste0(average_hours, "h ", average_minutes)) %>%
+  arrange(Device)
+
+
+# Create a title and subtitle
+title <- paste0("Time spent on <span style = 'color: ",
+                colors[1], ";'>", levels(RT_mobile_pc$Device)[1],
+                "</span> vs. <span style = 'color: ",
+                colors[2], ";'>", levels(RT_mobile_pc$Device)[2], "</span>")
+subtitle <- paste0("Meausred in minutes by Rescue Time app")
+
+# make the plot:
+ggplot(data = RT_mobile_pc, aes(x = row, y = weekday)) +
+  geom_density_ridges(aes(fill = Device, color = Device,  height = Duration),
+                      stat="identity", alpha = 0.75, size = 0.2, scale = 0.9, show.legend = FALSE) +
+  geom_text(data = RT_mobile_pc_averages, aes(x= (24 - starttime) * (12 + 1/4), y = c(1:7 + 0.5, 1:7 + 0.2),
+                                              label = paste(average_formatted,  "/day"),
+                                              hjust = 0, vjust = 0, family = font, color = Device),
+            show.legend = FALSE, size = 3.5) +
+  labs(x = "Time of Day", y = NULL, title = title, subtitle = subtitle) +
+  coord_cartesian(clip = "off") +
+  theme_minimal(base_family = font) +
+  theme(plot.margin = unit(c(2, 22, 2, 2), "mm"),
+        plot.background = element_rect(fill='transparent', color=NA),
+        panel.grid = element_blank(),
+        plot.title.position = "plot",
+        plot.title = element_markdown(face = "bold", size = title_font_size, hjust = 0, color = "grey10"),
+        plot.subtitle = element_markdown(size = subtitle_font_size, hjust = 0, color = "grey20", margin = margin(b = 20)),
+        axis.title.x = element_text(face = "bold", margin = margin(t = 6), color = "grey40", size = 10),
+        axis.text.x = element_text(size = 8, color = "grey50", margin = margin(t = 5)),
+        axis.text.y = element_text(size = 10, color = "grey30", margin = margin(r = 5), vjust = 0),
+        axis.ticks.x = element_line(color = "grey60", linewidth = 0.2)) +
+  scale_x_continuous(expand = c(0, 0), breaks = breaks, labels = RT_mobile_pc$hm[breaks + 1]) +
+  scale_y_discrete(expand = c(0,0)) +
+  scale_fill_manual(values = hsv(h = rgb2hsv(col2rgb(colors))[1,],
+                                 s = rgb2hsv(col2rgb(colors))[2,],
+                                 v = rgb2hsv(col2rgb(colors))[3,])) +
+  scale_color_manual(values = hsv(h = rgb2hsv(col2rgb(colors))[1,],
+                                  s = rgb2hsv(col2rgb(colors))[2,],
+                                  v = rgb2hsv(col2rgb(colors))[3,] - 0.1))
+
+# add.logo(plot1, "/Users/berg/DataspellProjects/MDSA-UofC/DATA605/10_project/logo.png", 0.1, 0.1, 50)
+```
+
+
 
 
 
