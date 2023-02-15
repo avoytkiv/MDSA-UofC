@@ -52,62 +52,11 @@ Of course, Python came in handy for some of the more advanced wrangling and data
 knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, results='asis')
 ```
 
-```{r}
-title_font_size <- 20
-subtitle_font_size <- 14
-font <- "Comfortaa"
-```
-
 _Creating your Story:_
 
 _Structure your data story around a set of exactly 5 clear and explicit analysis questions._
 _For each analysis question, describe the analysis process you used to try to answer it._
 _Provide a concise discussion of your findings, supported by clear charts, statistics, and other analytic results. Include clear, well-captioned images that illustrate your analysis process, findings, and any problems you encountered. Annotating the images with captions, arrows, and notes can be very helpful._
-
-```{r read_data, cache=TRUE}
-# Read data
-RT_mobile <- read.csv("/Users/berg/DataspellProjects/MDSA-UofC/DATA605/10_project/data/rescuetime-minute-grouped-mobile.csv")
-RT_pc <- read.csv("/Users/berg/DataspellProjects/MDSA-UofC/DATA605/10_project/data/rescuetime-minute-grouped-pc.csv")
-```
-
-```{r, cache=TRUE}
-# Read data
-RT_hourly <- read.csv("/Users/berg/DataspellProjects/MDSA-UofC/DATA605/10_project/data/rescuetime_hourly_20018-2022.csv")
-```
-
-```{r}
-start_date <- as.Date("2018-01-01")
-end_date <- as.Date("2022-12-31")
-unique_hours <- as.numeric(difftime(end_date, start_date, units = "hours")) / 24
-length_days <- as.numeric(difftime(end_date, start_date, units = "days"))
-```
-
-```{r}
-# Productivity colors from Rescue Time app:----
-Productivity_col <- rgb(red = c(13, 65, 177, 218, 212, 160),
-                        green = c(88, 130, 193, 105, 28, 235),
-                        blue = c(193, 221, 191, 93, 21, 142),
-                        names = c("Very Productive", "Productive", "Neutral",
-                                  "Distracting", "Very Distracting", "Mobile Phone"),
-                        maxColorValue = 255)
-colors <- Productivity_col[c("Productive", "Very Distracting")]
-```
-
-```{r}
-# Use the ggridges package to create a density plot. On x-axis we have the 'hm' variable, which is the hour and minute of the day. On the y-axis use day names. Plot both mobile and pc Duration.
-RT_mobile$weekday <- factor(RT_mobile$weekday, levels = c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"))
-RT_pc$weekday <- factor(RT_pc$weekday, levels = c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"))
-```
-
-```{r}
-# Combine the two data frames into one data frame with a Device column that I lost during the grouping process
-RT_mobile$Device <- "Mobile"
-RT_pc$Device <- "PC"
-RT_mobile_pc <- rbind(RT_mobile, RT_pc)
-# Make `Device` a factor
-RT_mobile_pc$Device <- factor(RT_mobile_pc$Device, levels = c("PC", "Mobile"))
-```
-
 
 ## Categories
 
