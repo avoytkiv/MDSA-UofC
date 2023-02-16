@@ -2,7 +2,7 @@
 title: "Rescue Time"
 subtitle: "An app to track your computer and mobile phone usage"
 author:
-    - Andrii Voitkiv
+- Andrii Voitkiv
 date: "`r format(Sys.time(), '%a, %b %d, %Y')`"
 geometry: margin=1cm
 output:
@@ -22,14 +22,16 @@ output:
 
 ---
 
+```{r global_options, echo=FALSE}
+# Set global options
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, results='asis')
+```
+
 <img src="/Users/berg/DataspellProjects/MDSA-UofC/DATA605/10_project/wallpaper.jpg"/>
 
 ## What is RescueTime?
 
 I don't know about you, but I've installed plenty of apps and promptly forgot about them for years. But with the RescueTime app, forgetting about it is the whole point! You simply install it on your devices and let it quietly track your activity for days, weeks, months, or even years. It's like a digital nanny that watches over you, making sure you don't spend all your time scrolling through social media, watching cat videos, or worse, hiding your Bitcoin wallet. And let me tell you, after collecting data on my own productivity for **1825 days**, I've got some pretty interesting insights to share.
-RescueTime is an app that passively tracks your device usage and provides you with detailed insights on how you spend your time. With RescueTime, you don't need to manually log your activities or keep a journal. Plus, who has time to manually log activities anyway? Instead, you simply install the app on your devices and let it run in the background, quietly collecting data on your daily habits. In this data story, we'll explore the insights and trends that can be discovered using RescueTime's powerful data-tracking capabilities.
-
-## The data
 
 ### Data collection
 
@@ -37,35 +39,29 @@ Now, you might be wondering how to get your hands on all that sweet productivity
 
 But, if you're a true data nerd like some of my readers (I won't name any names), you might want to try the RescueTime API instead. With the API, you can pull data directly from RescueTime and manipulate it to your heart's content. I personally invested $12 for a premium account to get access to the whole dataset. The downside? Well, let's just say it's not as simple as clicking a button. Plus, if you don't have a premium account, you can only retrieve data from the past three months. But hey, if you're up for the challenge, go for it!
 
-### Describing variables
-
 ### Data cleaning and ~~struggling~~ wrangling
 
-So, I've got my hands on this massive 650,000 row dataset and let me tell you, cleaning it up was a struggle. But fear not, fellow data enthusiasts, for I have discovered a secret weapon: Tableau Prep. This tool made my life so much easier by allowing me to easily filter, sort, and pivot my data with just a few clicks. No more spending hours trying to write complex scripts to wrangle your data - just drag and drop! Of course, I still had to spend some time fixing the messy parts of the data, but at least I didn't have to do it all by hand. Thanks, Tableau Prep, for making my life a little less miserable.
+So, I've got my hands on this massive **650,000 row dataset** and let me tell you, cleaning it up was a struggle. But fear not, fellow data enthusiasts, for I have discovered a secret weapon: Tableau Prep. This tool made my life so much easier by allowing me to easily filter, sort, and pivot my data with just a few clicks. No more spending hours trying to write complex scripts to wrangle your data - just drag and drop! Of course, I still had to spend some time fixing the messy parts of the data, but at least I didn't have to do it all by hand. Thanks, Tableau Prep, for making my life a little less miserable.
 
 ## Tools
 
 Of course, Python came in handy for some of the more advanced wrangling and data pulls from the RescueTime API. But then, against all odds of finishing this project on time, I decided to take on R. Let me tell you, I hated R from the very beginning, and I still don't know why I chose this road. And why I've hated R? But, for better or for worse, I made it work.For some of the more complex visualizations, I even called upon `r2d3`, the library for D3, to give my charts a little extra. And, of course, I couldn't forget the HTML and CSS styling to tie it all together. All in a day's work for a productivity data aficionado!
 
-```{r global_options, echo=FALSE}
-# Set global options
-knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, results='asis')
-```
 
-_Creating your Story:_
+::: {.infobox .warning data-latex="{warning}"}
+**NOTE**
 
-_Structure your data story around a set of exactly 5 clear and explicit analysis questions._
-_For each analysis question, describe the analysis process you used to try to answer it._
-_Provide a concise discussion of your findings, supported by clear charts, statistics, and other analytic results. Include clear, well-captioned images that illustrate your analysis process, findings, and any problems you encountered. Annotating the images with captions, arrows, and notes can be very helpful._
+I hated R from the very beginning, and I still don't know why I chose this road. And why I've hated R?
+::::
 
 ## Categories
 
 Each activity is categorized into five productivity scores: Very Distracting, Distracting, Neutral, Productive and Very Productive. But don't be fooled by the label - sometimes you can be productive even though an activity is classified as "distracting". For example, you might be scrolling through social media to network with potential business contacts or to gain inspiration for a new project. However, manually tweaking the productivity metrics for each activity in your RescueTime account to better reflect your actual level of productivity can be a laborious task - checked (thanks God, Rescue Time counts the time spent on their website as "Productive").
 
 ::: {.infobox .caution data-latex="{caution}"}
-**NOTICE!**
+**NOTE**
 
-However, manually tweaking the productivity metrics for each activity in your RescueTime account to better reflect your actual level of productivity can be a laborious task - checked (thanks God, Rescue Time counts the time spent on their website as "Productive").
+Manually tweaking the productivity metrics for each activity in your RescueTime account to better reflect your actual level of productivity can be a laborious task.
 ::::
 
 The activities tracked on your desktop computer or laptop are divided into 11 main categories: Software development, Design & composition, Communication & scheduling, Utilities, Reference & learning, Uncategorized, Business, Social networking, Shopping, News & opinion, and Entertainment. The figure below shows the average time per day spent in these 11 categories as well as the daily time spent on the mobile device.
@@ -82,7 +78,9 @@ The activities tracked on your desktop computer or laptop are divided into 11 ma
 ## We are not machines; Or productivity is not necessarily evenly distributed {.tabset}
 Ah, the joys of being human. As much as we like to think we're productivity machines, the truth is that our output is far from consistent. To get a better sense of how my productivity fluctuated over time, I decided to create two calendar heatmaps: one to show my total time spent on my computer and another to show my productivity score (calculated as the fraction of productive and very productive time combined) over time.
 
+
 > Looking at these heatmaps partitioned by year, I feel a little nostalgic (the melodramatic musing is playing).
+
 
 ### Calendar of how much time I spent
 <img src="/Users/berg/DataspellProjects/MDSA-UofC/DATA605/10_project/main_files/figure-html/heatmap-total-time.png"/>
@@ -106,7 +104,27 @@ Ah, the joys of being human. As much as we like to think we're productivity mach
 
 I mean, who wakes up and checks their laptop before even getting out of bed? But with mobile phones being constantly by our side, I guess it's not so surprising after all. And don't even get me started on the addiction to social media scrolling... It was quite revealing to see how much time I spend on my phone doing "quick checks" that turn into hours of mindless browsing. I was actually proud to see that I spend less time on my computer, but then I realized that I'm just glued to my phone screen instead. Oh well, at least I'm aware of it now!
 
+## Conclusion
 
+### Pros
+-   Data about computer and mobile device usage are continously tracked.
+-   All data is (freely) accessible without need for Premium subscription.
+-   You can install the RescueTime app on multiple computers as well as your mobile phone(s) or tablet(s).
+-   You can automate your data collection using the (well-documented) RescueTime API.
+-   You can analyze and visualize various activity and productivity metrics, and generate reports, on your RescueTime account.
+### Cons
+- iOS Devices are not trackable to full extent due to restrictive Apple policy.
+-   For accurate use of the automatically assigned productivity metrics, a manual check or adjustment is needed.
+-   Without the Premium account the RescueTime API only allows access to data from the last 3 months.
 
+## References
+- [RescueTime](https://www.rescuetime.com/)
+- [RescueTime API](https://www.rescuetime.com/anapi/setup/documentation)
+- [Animation with gganimate library](https://www.datanovia.com/en/blog/gganimate-how-to-create-plots-with-beautiful-animation-in-r/)
+- [d3 in R with r2d3 library](https://rstudio.github.io/r2d3/articles/gallery.html)
+- [Functional programming in R, walk() function](https://dcl-prog.stanford.edu/index.html)
+- [Simple icons](https://icons8.com/)
+- [Put content in tabs](https://bookdown.org/yihui/rmarkdown-cookbook/html-tabs.html)
+- [Custom blocks](https://bookdown.org/yihui/rmarkdown-cookbook/custom-blocks.html)
 
 
