@@ -12,5 +12,13 @@
 
 .warning {
   background-image: url("images/warning.png");
+  background-color: #DA695D;
+  color: white;
+}
+
+.info {
+  background-image: url("images/info.png");
+  background-color: #4182DD;
+  color: white;
 }
 /* Path: DATA605/10_project/style.css */
