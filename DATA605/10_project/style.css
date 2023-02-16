@@ -12,8 +12,8 @@
 
 .warning {
   background-image: url("images/warning.png");
-  background-color: #DA695D;
-  color: white;
+  background-color: #FFACAC;
+  color: black;
 }
 
 .info {
