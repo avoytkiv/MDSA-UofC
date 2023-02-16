@@ -66,6 +66,13 @@ Manually tweaking the productivity metrics for each activity in your RescueTime 
 
 The activities tracked on your desktop computer or laptop are divided into 11 main categories: Software development, Design & composition, Communication & scheduling, Utilities, Reference & learning, Uncategorized, Business, Social networking, Shopping, News & opinion, and Entertainment. The figure below shows the average time per day spent in these 11 categories as well as the daily time spent on the mobile device.
 
+::: {.infobox .info data-latex="{info}"}
+**INFO**
+
+There are 5 productivity scores: Very Distracting, Distracting, Neutral, Productive and Very Productive.
+And 11 main categories: Software development, Design & composition, Communication & scheduling, Utilities, Reference & learning, Uncategorized, Business, Social networking, Shopping, News & opinion, and Entertainment.
+::::
+
 <img src="/Users/berg/DataspellProjects/MDSA-UofC/DATA605/10_project/main_files/figure-html/donuts.png"/>
 
 ## Productivity per day of the week and time of day {.tabset}
