@@ -7,7 +7,7 @@ date: "`r format(Sys.time(), '%a, %b %d, %Y')`"
 geometry: margin=1cm
 output:
     html_document:
-        css: style.css
+        css: /Users/berg/DataspellProjects/MDSA-UofC/DATA605/10_project/style.css
         toc: true
         toc_float: false
         toc_depth: 3
@@ -21,6 +21,10 @@ output:
         highlight: tango # pygments, kate, espresso, zenburn, haddock, textmate
 
 ---
+```{r}
+library(pins)
+board <- board_folder("/Users/berg/DataspellProjects/MDSA-UofC/DATA605/10_project/pins")
+```
 
 <img src="/Users/berg/DataspellProjects/MDSA-UofC/DATA605/10_project/wallpaper.jpg"/>
 
@@ -105,11 +109,21 @@ _Provide a concise discussion of your findings, supported by clear charts, stati
 # Read data
 RT_mobile <- read.csv("/Users/berg/DataspellProjects/MDSA-UofC/DATA605/10_project/data/rescuetime-minute-grouped-mobile.csv")
 RT_pc <- read.csv("/Users/berg/DataspellProjects/MDSA-UofC/DATA605/10_project/data/rescuetime-minute-grouped-pc.csv")
+
+# Save to board
+pin_write(board, RT_mobile, "RT_mobile")
+pin_write(board, RT_pc, "RT_pc")
+```
+```{r}
+t = pin_read(board="/Users/berg/DataspellProjects/MDSA-UofC/DATA605/10_project/pins", name="RT_mobile")
 ```
 
 ```{r, cache=TRUE}
 # Read data
 RT_hourly <- read.csv("/Users/berg/DataspellProjects/MDSA-UofC/DATA605/10_project/data/rescuetime_hourly_20018-2022.csv")
+
+# Save to board
+pin_write(board, RT_hourly, "RT_hourly")
 ```
 
 ```{r}
@@ -150,8 +164,8 @@ library(dplyr)
 # Group by Device, weekday and hm. Summarize Duration with mean
 RT_mobile_pc <- RT_mobile_pc %>%
   group_by(Device, weekday, hm) %>%
-  summarize(Duration = mean(Duration)) %>%
-  mutate(row = row_number() - 1)
+  dplyr::summarize(Duration = mean(Duration)) %>%
+  dplyr::mutate(row = row_number() - 1)
 ```
 ```{r}
 # Create a vector of breaks for the x-axis
@@ -183,18 +197,19 @@ The activities tracked on your desktop computer or laptop are divided into 11 ma
 # Group by Category and Productivity. Summarize by Duration
 RT_by_category <- RT_hourly %>%
   group_by(Category, Productivity) %>%
-  summarize(Duration = sum(Duration) / length_days / 60) %>%
+  dplyr::summarize(Duration = sum(Duration) / length_days / 60) %>%
   mutate(Productivity = case_when(
     Productivity == 2 ~ "Very Productive",
     Productivity == 1 ~ "Productive",
     Productivity == 0 ~ "Neutral",
     Productivity == -1 ~ "Distracting",
     Productivity == -2 ~ "Very Distracting"),
-         Productivity = factor(Productivity, levels = c("Very Productive", "Productive", "Neutral", "Distracting", "Very Distracting")),
+         # Productivity = factor(Productivity, levels = c("Very Productive", "Productive", "Neutral", "Distracting", "Very Distracting")),
          Category = factor(Category, levels = c("Business", "Communication & Scheduling", "Design & Composition", "Entertainment", "iOS Device", "News & Opinion","Reference & Learning", "Shopping", "Social Networking", "Software Development", "Uncategorized", "Utilities")),
          Total_Duration = sum(Duration)
   )
-
+# Convert Productivity to factor
+RT_by_category$Productivity <- factor(RT_by_category$Productivity, levels = c("Very Productive", "Productive", "Neutral", "Distracting", "Very Distracting"))
 # Arrange by Total Duration in descending order
 RT_by_category <- RT_by_category %>%
   arrange(desc(Total_Duration))
@@ -248,7 +263,7 @@ legend(0.5, 0.5, legend = levels(RT_by_category$Productivity),
 #
 ordered_cats <- RT_by_category %>%
   group_by(Category) %>%
-  summarize(Total_Duration = sum(Total_Duration)) %>%
+  dplyr::summarize(Total_Duration = sum(Total_Duration)) %>%
   arrange(desc(Total_Duration)) %>%
   pull(Category)
 # then add the individual donut plots:
@@ -267,7 +282,7 @@ walk(ordered_cats, function(Category){
 ```{r}
 RT_by_weekday <- RT_hourly %>%
   group_by(weekday, Productivity) %>%
-  summarize(Duration = sum(Duration)) %>%
+  dplyr::summarize(Duration = sum(Duration)) %>%
   mutate(Productivity = case_when(
            Productivity == 2 ~ "Very Productive",
            Productivity == 1 ~ "Productive",
@@ -279,7 +294,7 @@ RT_by_weekday <- RT_hourly %>%
 
 RT_by_weekday_count <- RT_hourly %>%
   group_by(weekday) %>%
-  summarize(count = n_distinct(as.Date(paste(year, month, dom, sep = "-"), format = "%Y-%m-%d")))
+  dplyr::summarize(count = n_distinct(as.Date(paste(year, month, dom, sep = "-"), format = "%Y-%m-%d")))
 
 RT_by_weekday_merged <- left_join(RT_by_weekday, RT_by_weekday_count, by = "weekday")
 
@@ -322,10 +337,10 @@ ggplot(data = RT_by_weekday_merged, aes(x = weekday, y = Avg_Duration, fill = Pr
         plot.title = element_markdown(face = "bold", size = title_font_size, hjust = 0, color="grey10"),
         plot.subtitle = element_markdown(size = subtitle_font_size, hjust = 0, color="grey20"),
         axis.text.y = element_text(size=10, color = "grey30"),
-        axis.title.x = element_text(face = "bold", margin = margin(t = 6), color = "grey40", size = 10),
+        axis.title.x = element_text(face = "bold", color = "grey40", size = 10),
         axis.ticks.x = element_line(color = "grey60", size = 0.1),
         axis.title.y = element_text(face = "bold", color = "grey40", size = 10),
-        axis.text.x = element_text(size = 10, color = "grey50", margin = margin(t = 2))) +
+        axis.text.x = element_text(size = 10, color = "grey50")) +
   annotation_custom(grid::rasterGrob(logo, width=unit(0.2, "npc"), height=unit(0.2, "npc")),
                     xmin = Inf, xmax = Inf, ymin = Inf, ymax = Inf)
 
@@ -335,7 +350,7 @@ ggplot(data = RT_by_weekday_merged, aes(x = weekday, y = Avg_Duration, fill = Pr
 ```{r}
 RT_by_hour <- RT_hourly %>%
   group_by(hour, Productivity) %>%
-  summarize(Duration = sum(Duration)) %>%
+  dplyr::summarize(Duration = sum(Duration)) %>%
   mutate(Productivity = case_when(
     Productivity == 2 ~ "Very Productive",
     Productivity == 1 ~ "Productive",
@@ -404,7 +419,7 @@ Ah, the joys of being human. As much as we like to think we're productivity mach
 RT_by_date <- RT_hourly %>%
   mutate(Date = as.Date(paste(year, month, dom, sep = "-"), format = "%Y-%m-%d")) %>%
   group_by(Date) %>%
-  summarize(Duration = sum(Duration))
+  dplyr::summarize(Duration = sum(Duration))
 ```
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 # Print Min and Max Duration
@@ -422,18 +437,18 @@ r2d3(data = RT_by_date, d3_version = 4, container = "div", options = list(start 
 RT_by_date_productivity_temp <- RT_hourly %>%
   mutate(Date = as.Date(paste(year, month, dom, sep = "-"), format = "%Y-%m-%d")) %>%
   group_by(Date, Productivity) %>%
-  summarize(Duration = sum(Duration) / length_days / 60) %>%
+  dplyr::summarize(Duration = sum(Duration) / length_days / 60) %>%
     mutate(Productivity = case_when(
         Productivity == 2 ~ "Productive",
         Productivity == 1 ~ "Productive",
         Productivity == 0 ~ "Not Productive",
         Productivity == -1 ~ "Not Productive",
-        Productivity == -2 ~ "Not Productive"),
-             Productivity = factor(Productivity, levels = c("Productive", "Not Productive"))
+        Productivity == -2 ~ "Not Productive")
     ) %>%
     group_by(Date, Productivity) %>%
-    summarize(Duration = sum(Duration))
-
+    dplyr::summarize(Duration = sum(Duration))
+# Convert Productivity to factor
+RT_by_date_productivity_temp$Productivity <- factor(RT_by_date_productivity_temp$Productivity, levels = c("Productive", "Not Productive"))
 # Find fraction of productive time per day and filter out days with no productive time
 RT_by_date_productivity <- RT_by_date_productivity_temp %>%
   group_by(Date) %>%
@@ -452,7 +467,15 @@ r2d3(data = RT_by_date_productivity, d3_version = 4, container = "div", options 
 ```
 
 ## {-}
-In <font color="orange"> May 2018 </font>, I had just closed <font color="#0D58C1"> a project that had lasted for a few years </font>, so the time from the beginning of 2018 until May of that year was highly productive. After that, I decided to take some time off to plan my wedding and prepare for the big day by <font color="#D41C15"> visiting wedding websites and going through a flurry of organizing activities </font> (you know how it is). <font color="orange"> Spring of 2019 </font> brought <font color="#0D58C1"> a new job </font> at a company, and in <font color="orange"> September of 2020 </font>, I changed positions to focus more on <font color="#0D58C1"> the technological aspects </font>(data science, here I come!) - dark blue squares everywhere. <font color="orange"> The end of 2020 and beginning of 2021 </font> my partner and I indulged in watching all the Christmas <font color="#D41C15"> movies </font> available (yes, all of them, including with imdb rate score below 5). After that, I became somewhat productive <font color="#0D58C1"> trading crypto </font> and babysitting (don't ask me how that worked), so I <font color="#c7e9c0"> didn't have to work much </font> throughout <font color="orange"> the summer of 2021 </font>. <font color="orange"> In February 2022 </font>, the war happened, so I came back to my laptop to start <font color="#0D58C1"> the University of Calgary program </font>, resulting in a lot of dark blue squares. As you can see, our productivity ebbs and flows, and sometimes life just gets in the way.
+*In May 2018*, I had just closed <font color="#0D58C1"> a project that had lasted for a few years </font>, so the time from the beginning of 2018 until May of that year was highly productive. After that, I decided to take some time off to plan my wedding and prepare for the big day by <font color="#D41C15"> visiting wedding websites and going through a flurry of organizing activities </font> (you know how it is).
+
+*Spring of 2019* brought <font color="#0D58C1"> a new job </font> at a company, and in
+
+*September of 2020*, I changed positions to focus more on <font color="#0D58C1"> the technological aspects </font>(data science, here I come!) - dark blue squares everywhere.
+
+*The end of 2020 and beginning of 2021* my partner and I indulged in watching all the Christmas <font color="#D41C15"> movies </font> available (yes, all of them, including with imdb rate score below 5). After that, I became somewhat productive <font color="#0D58C1"> trading crypto </font> and babysitting (don't ask me how that worked), so I <font color="#c7e9c0"> didn't have to work much </font> throughout *the summer of 2021*.
+
+*In February 2022*, the war happened, so I came back to my laptop to start <font color="#0D58C1"> the University of Calgary program </font>, resulting in a lot of dark blue squares. As you can see, our productivity ebbs and flows, and sometimes life just gets in the way.
 
 ## Mobile vs PC
 ```{r}
@@ -463,7 +486,7 @@ library(ggtext)
 
 RT_mobile_pc_averages <- RT_mobile_pc %>%
   group_by(weekday, Device) %>%
-  summarize(average = round(mean(Duration))) %>%
+  dplyr::summarize(average = round(mean(Duration))) %>%
   mutate(average_hours = floor(average / 60),
          average_minutes = average %% 60,
          average_formatted = paste0(average_hours, "h ", average_minutes)) %>%

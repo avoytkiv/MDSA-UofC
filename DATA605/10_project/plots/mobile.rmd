@@ -1,0 +1,69 @@
+```{r}
+# Make a ggridges plot using the ggridges package
+library(ggridges)
+library(ggplot2)
+library(ggtext)
+
+RT_mobile_pc_averages <- RT_mobile_pc %>%
+  group_by(weekday, Device) %>%
+  dplyr::summarize(average = round(mean(Duration))) %>%
+  mutate(average_hours = floor(average / 60),
+         average_minutes = average %% 60,
+         average_formatted = paste0(average_hours, "h ", average_minutes)) %>%
+  arrange(Device)
+
+
+# Create a title and subtitle
+title <- paste0("Time spent on <span style = 'color: ",
+                colors[1], ";'>", levels(RT_mobile_pc$Device)[1],
+                "</span> vs. <span style = 'color: ",
+                colors[2], ";'>", levels(RT_mobile_pc$Device)[2], "</span>")
+subtitle <- paste0("Meausred in minutes by Rescue Time app")
+
+# make the plot:
+ggplot(data = RT_mobile_pc, aes(x = row, y = weekday)) +
+  geom_density_ridges(aes(fill = Device, color = Device,  height = Duration),
+                      stat="identity", alpha = 0.75, size = 0.2, scale = 0.9, show.legend = FALSE) +
+  geom_text(data = RT_mobile_pc_averages, aes(x= (24 - starttime) * (12 + 1/4), y = c(1:7 + 0.5, 1:7 + 0.2),
+                                              label = paste(average_formatted,  "/day"),
+                                              hjust = 0, vjust = 0, family = font, color = Device),
+            show.legend = FALSE, size = 3.5) +
+  labs(x = "Time of Day", y = NULL, title = title, subtitle = subtitle) +
+  coord_cartesian(clip = "off") +
+  theme_minimal(base_family = font) +
+  theme(plot.margin = unit(c(2, 22, 2, 2), "mm"),
+        plot.background = element_rect(fill='transparent', color=NA),
+        panel.grid = element_blank(),
+        plot.title.position = "plot",
+        plot.title = element_markdown(face = "bold", size = title_font_size, hjust = 0, color = "grey10"),
+        plot.subtitle = element_markdown(size = subtitle_font_size, hjust = 0, color = "grey20", margin = margin(b = 20)),
+        axis.title.x = element_text(face = "bold", margin = margin(t = 6), color = "grey40", size = 10),
+        axis.text.x = element_text(size = 8, color = "grey50", margin = margin(t = 5)),
+        axis.text.y = element_text(size = 10, color = "grey30", margin = margin(r = 5), vjust = 0),
+        axis.ticks.x = element_line(color = "grey60", linewidth = 0.2)) +
+  scale_x_continuous(expand = c(0, 0), breaks = breaks, labels = RT_mobile_pc$hm[breaks + 1]) +
+  scale_y_discrete(expand = c(0,0)) +
+  scale_fill_manual(values = hsv(h = rgb2hsv(col2rgb(colors))[1,],
+                                 s = rgb2hsv(col2rgb(colors))[2,],
+                                 v = rgb2hsv(col2rgb(colors))[3,])) +
+  scale_color_manual(values = hsv(h = rgb2hsv(col2rgb(colors))[1,],
+                                  s = rgb2hsv(col2rgb(colors))[2,],
+                                  v = rgb2hsv(col2rgb(colors))[3,] - 0.1))
+```
+```{r}
+# Wrap up data transformation and plotting into a function
+make_ggridges <- function(data, colors, font, title_font_size, subtitle_font_size) {
+  # Make a ggridges plot using the ggridges package
+  library(ggridges)
+  library(ggplot2)
+  library(ggtext)
+
+  RT_mobile_pc_averages <- data %>%
+    group_by(weekday, Device) %>%
+    dplyr::summarize(average = round(mean(Duration))) %>%
+    mutate(average_hours = floor(average / 60),
+           average_minutes = average %% 60,
+           average_formatted = paste0(average_hours, "h ", average_minutes)) %>%
+    arrange(Device)
+
+```

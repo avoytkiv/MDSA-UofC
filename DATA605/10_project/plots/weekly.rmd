@@ -1,0 +1,152 @@
+
+```{r}
+library(dplyr)
+library(pins)
+library(ggplot2)
+```
+
+```{r}
+# Data
+board <- board_folder("/Users/berg/DataspellProjects/MDSA-UofC/DATA605/10_project/pins")
+RT_hourly <- pin_read("RT_hourly", board = board)
+```
+
+```{r}
+title_font_size <- 20
+subtitle_font_size <- 14
+font <- "Comfortaa"
+```
+
+```{r}
+# Productivity colors from Rescue Time app:----
+Productivity_col <- rgb(red = c(13, 65, 177, 218, 212, 160),
+                        green = c(88, 130, 193, 105, 28, 235),
+                        blue = c(193, 221, 191, 93, 21, 142),
+                        names = c("Very Productive", "Productive", "Neutral",
+                                  "Distracting", "Very Distracting", "Mobile Phone"),
+                        maxColorValue = 255)
+colors <- Productivity_col[c("Productive", "Very Distracting")]
+```
+
+```{r}
+RT_by_weekday <- RT_hourly %>%
+  group_by(weekday, Productivity) %>%
+  dplyr::summarize(Duration = sum(Duration)) %>%
+  mutate(Productivity = case_when(
+    Productivity == 2 ~ "Very Productive",
+    Productivity == 1 ~ "Productive",
+    Productivity == 0 ~ "Neutral",
+    Productivity == -1 ~ "Distracting",
+    Productivity == -2 ~ "Very Distracting"
+  )
+  )
+
+RT_by_weekday_count <- RT_hourly %>%
+  group_by(weekday) %>%
+  dplyr::summarize(count = n_distinct(as.Date(paste(year, month, dom, sep = "-"), format = "%Y-%m-%d")))
+
+RT_by_weekday_merged <- left_join(RT_by_weekday, RT_by_weekday_count, by = "weekday")
+
+RT_by_weekday_merged <- RT_by_weekday_merged %>%
+  mutate(weekday = factor(weekday, levels = c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")),
+         Avg_Duration = Duration / count / 3600,
+         Avg_Duration = if_else(Productivity %in% c("Distracting", "Very Distracting"), -Avg_Duration, Avg_Duration))
+```
+
+```{r}
+library('tidyverse')
+# Create a title and subtitle
+label <- sub(",([^,]*)$", " and\\1", paste0("<span style='font-size:8pt;'>",
+                                            paste(imap_chr(Productivity_col[-c(4:6)], function(color, name){
+                                              paste0("<span style='color:", color, ";'>", name, "</span>")
+                                            }), collapse = ", "), " time are shown as positive values. <br>",
+                                            paste(imap_chr(Productivity_col[c(5,4)], function(color, name){
+                                              paste0("<span style='color:", color, ";'>", name, "</span>")
+                                            }), collapse = " and "), " time are shown as negative values. </span>"))
+
+title <- paste0("Productivity by Day of the Week")
+subtitle <- paste0("Meausred in minutes by Rescue Time app")
+
+# Make the plot
+library('ggtext')
+ggplot(data = RT_by_weekday_merged, aes(x = weekday, y = Avg_Duration, fill = Productivity)) +
+  geom_bar(stat = "identity", position = "stack") +
+  labs(x = "Day of the Week", y = "Time Spent (hours)", title = title, subtitle = paste0("Measured with RescueTime <br>
+                         <br>", label)) +
+  theme_minimal(base_family = "Comfortaa") +
+  scale_fill_manual(values = Productivity_col) +
+  coord_cartesian(clip = "off") +
+  theme(plot.margin = unit(c(2, 2, 2, 2), "mm"),
+        panel.grid.major.y = element_line(color = "grey90", size = 0.2),
+        panel.grid.minor.x = element_blank(),
+        panel.grid.major.x = element_blank(),
+        legend.position = "none",
+        plot.title.position = "plot",
+        plot.title = element_markdown(face = "bold", size = title_font_size, hjust = 0, color="grey10"),
+        plot.subtitle = element_markdown(size = subtitle_font_size, hjust = 0, color="grey20"),
+        axis.text.y = element_text(size=10, color = "grey30"),
+        axis.title.x = element_text(face = "bold", color = "grey40", size = 10),
+        axis.ticks.x = element_line(color = "grey60", size = 0.1),
+        axis.title.y = element_text(face = "bold", color = "grey40", size = 10),
+        axis.text.x = element_text(size = 10, color = "grey50"))
+```
+
+
+```{r}
+# Wrap up the data transformation and the plot in a function
+plot_productivity_by_weekday <- function(data, title, subtitle, label, title_font_size, subtitle_font_size){
+  # Annotate the function with roxygen2
+    #' Plot productivity by weekday
+    #' @param data A data frame with columns: year, month, dom, weekday, Productivity, Duration
+    #' @param title The title of the plot
+    #' @param subtitle The subtitle of the plot
+    #' @param label The label of the plot
+    #' @param title_font_size The font size of the title
+    #' @param subtitle_font_size The font size of the subtitle
+    #' @return A ggplot object
+    #' @export
+    #' @examples
+    #' plot_productivity_by_weekday(data = RT_hourly, title = "Productivity by Day of the Week", subtitle = "Measured in minutes by Rescue Time app", label = label, title_font_size = 12, subtitle_font_size = 10)
+    #' @importFrom ggplot2 ggplot aes geom_bar labs theme_minimal scale_fill_manual coord_cartesian theme element_line element_blank element_text element_markdown unit
+    #' @importFrom dplyr group_by summarise left_join mutate case_when n_distinct as_date
+    #' @importFrom purrr imap_chr
+    #' @importFrom ggtext element_markdown element_text element_line element_blank unit
+  data %>%
+    group_by(weekday, Productivity) %>%
+    dplyr::summarize(Duration = sum(Duration)) %>%
+    mutate(Productivity = case_when(
+      Productivity == 2 ~ "Very Productive",
+      Productivity == 1 ~ "Productive",
+      Productivity == 0 ~ "Neutral",
+      Productivity == -1 ~ "Distracting",
+      Productivity == -2 ~ "Very Distracting"
+    )
+    ) %>%
+    group_by(weekday) %>%
+    dplyr::summarize(count = n_distinct(as.Date(paste(year, month, dom, sep = "-"), format = "%Y-%m-%d"))) %>%
+    left_join(., data, by = "weekday") %>%
+    mutate(weekday = factor(weekday, levels = c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")),
+           Avg_Duration = Duration / count / 3600,
+           Avg_Duration = if_else(Productivity %in% c("Distracting", "Very Distracting"), -Avg_Duration, Avg_Duration)) %>%
+    ggplot(aes(x = weekday, y = Avg_Duration, fill = Productivity)) +
+    geom_bar(stat = "identity", position = "stack") +
+    labs(x = "Day of the Week", y = "Time Spent (hours)", title = title, subtitle = paste0("Measured with RescueTime <br>
+                         <br>", label)) +
+    theme_minimal(base_family = "Comfortaa") +
+    scale_fill_manual(values = Productivity_col) +
+    coord_cartesian(clip = "off") +
+    theme(plot.margin = unit(c(2, 2, 2, 2), "mm"),
+          panel.grid.major.y = element_line(color = "grey90", size = 0.2),
+          panel.grid.minor.x = element_blank(),
+          panel.grid.major.x = element_blank(),
+          legend.position = "none",
+          plot.title.position = "plot",
+          plot.title = element_markdown(face = "bold", size = title_font_size, hjust = 0, color="grey10"),
+          plot.subtitle = element_markdown(size = subtitle_font_size, hjust = 0, color="grey20"),
+          axis.text.y = element_text(size=10, color = "grey30"),
+          axis.title.x = element_text(face = "bold", color = "grey40", size = 10),
+          axis.ticks.x = element_line(color = "grey60", size = 0.1),
+          axis.title.y = element_text(face = "bold", color = "grey40", size = 10),
+          axis.text.x = element_text(size = 10, color = "grey50"))
+}
+```

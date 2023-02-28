@@ -1,0 +1,188 @@
+---
+title: "Rescue Time"
+subtitle: "An app to track your computer and mobile phone usage"
+author:
+- Andrii Voitkiv
+date: "`r format(Sys.time(), '%a, %b %d, %Y')`"
+geometry: margin=1cm
+output:
+    html_document:
+        css: /Users/berg/DataspellProjects/MDSA-UofC/DATA605/10_project/style.css
+        toc: false
+        toc_float: false
+        toc_depth: 3
+        number_sections: false
+        fig_width: 16
+        fig_height: 8
+        fig_retina: 6
+        fig_path: Figs/
+        keep_md: false
+        theme: cerulean
+        highlight: tango # pygments, kate, espresso, zenburn, haddock, textmate
+
+---
+
+```{r global_options, echo=FALSE}
+# Set global options
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, results='asis')
+```
+
+<img src="/Users/berg/DataspellProjects/MDSA-UofC/DATA605/10_project/wallpaper.png"/>
+
+
+
+## What is RescueTime?
+
+I don't know about you, but I've installed plenty of apps and promptly forgot about them for years. But with the [RescueTime app](https://www.rescuetime.com/), forgetting about it is the whole point! You simply install it on your devices and let it quietly track your activity for days, weeks, months, or even years. It's like a digital nanny that watches over you, making sure you don't spend all your time scrolling through social media, watching cat videos, or worse, hiding your Bitcoin wallet. And let me tell you, after collecting data on my own productivity for **1825 days**, I've got some pretty interesting insights to share.
+
+### Data collection
+
+Now, you might be wondering how to get your hands on all that sweet productivity data. Well, you have a couple of options. If you prefer the easy way out, just head over to your RescueTime account and click on the “Download your data archive” link under “Your data”. You'll get a nifty .csv file that lists the minutes you've spent on each activity per hour of the day since you started using RescueTime. Easy peasy, lemon squeezy!
+
+But, if you're a true data nerd like some of my readers (I won't name any names), you might want to try the [RescueTime API](https://www.rescuetime.com/anapi/setup/documentation) instead. With the API, you can pull data directly from RescueTime and manipulate it to your heart's content. I personally invested $12 for a premium account to get access to the whole dataset. The downside? Well, let's just say it's not as simple as clicking a button. Plus, if you don't have a premium account, you can only retrieve data from the past three months. But hey, if you're up for the challenge, go for it!
+
+### Data cleaning and ~~struggling~~ wrangling
+
+So, I've got my hands on this massive **650,000 row dataset** and let me tell you, cleaning it up was a struggle. But fear not, fellow data enthusiasts, for I have discovered a secret weapon: Tableau Prep. This tool made my life so much easier by allowing me to easily filter, sort, and pivot my data with just a few clicks. No more spending hours trying to write complex scripts to wrangle your data - just drag and drop! Of course, I still had to spend some time fixing the messy parts of the data, but at least I didn't have to do it all by hand. Thanks, Tableau Prep, for making my life a little less miserable.
+
+## Tools
+
+Of course, `Python` came in handy for some of the more advanced wrangling and data pulls from the RescueTime API. But then, against all odds of finishing this project on time, I decided to take on `R`. Let me tell you, I hated R from the very beginning, and I still don't know why I chose this road. And why I've hated R? But, for better or for worse, I made it work.
+
+::: {.infobox .warning data-latex="{warning}"}
+**NOTE**
+
+I hated R from the very beginning, and I still don't know why I chose this road. And why I've hated R?
+::::
+
+For some of the more complex visualizations, I even called upon r2d3, the library for `D3`, to give my charts a little extra. And, of course, I couldn't forget the `HTML` and `CSS` styling to tie it all together. All in a day's work for a productivity data aficionado!
+
+<img src="/Users/berg/DataspellProjects/MDSA-UofC/DATA605/10_project/workflow.png"/>
+
+## How is the Average Time broken down by Categories and Productivity
+
+Each activity is categorized into five productivity scores: Very Distracting, Distracting, Neutral, Productive and Very Productive. But don't be fooled by the label - sometimes you can be productive even though an activity is classified as "distracting". For example, you might be scrolling through social media to network with potential business contacts or to gain inspiration for a new project. However, manually tweaking the productivity metrics for each activity in your RescueTime account to better reflect your actual level of productivity can be a laborious task - checked (thanks God, Rescue Time counts the time spent on their website as "Productive").
+
+::: {.infobox .caution data-latex="{caution}"}
+**NOTE**
+
+Manually tweaking the productivity metrics for each activity in your RescueTime account to better reflect your actual level of productivity can be a laborious task.
+::::
+
+The activities tracked on your desktop computer or laptop are divided into 11 main categories: Software development, Design & composition, Communication & scheduling, Utilities, Reference & learning, Uncategorized, Business, Social networking, Shopping, News & opinion, and Entertainment. The figure below shows the average time per day spent in these 11 categories as well as productivity proportions withing each Category. Let me explain you. The Category is further divided into subcategories, which I don't want to bore you with. But if you're curious, you can check out the full list of categories and subcategories on the [RescueTime website](https://www.rescuetime.com/categories). The only thing I want to point out is that <mark style="background: #FFF3A3A6;">within the Category the productivity may differ</mark>. For example, the "Social Networking" category includes all social media platforms, but the productivity score for each platform may differ. LinkedIn, for instance, is classified as Professional Networking, and it is considered "Productive", while Facebook is classified as "Social Networking", and it is considered "Distracting". So, the productivity score for the same category may differ.
+
+::: {.infobox .info data-latex="{info}"}
+**INFO**
+
+There are 5 productivity scores: Very Distracting, Distracting, Neutral, Productive and Very Productive.
+::::
+
+
+<img src="/Users/berg/DataspellProjects/MDSA-UofC/DATA605/10_project/main_files/figure-html/donuts.png"/>
+
+
+Luckily, I've spent a decent amount of time on productive activities like Reference and Learning and Software Development, but have to admit that social media has sucked up way too much of my time. (Come on, who can resist those cute animal videos?) Though, I'm not going down without a fight! I'm going to set up "focus time" blocks to keep me on track, and muting those pesky phone notifications. Plus, I'm determined to elevate Writing, Design & Composition from underperforming category to top category. Who knows, maybe I'll even start writing the next great data story in my spare time. P.S. I'm looking at you, JavaScript. P.P.S. I know you're there, Python. P.P.P.S. I'm not going to let you get away with this, R.
+
+## Are there any weekly and intraday rhythms? {.tabset}
+When you track your activities with a tool like RescueTime, you can start to see trends in how you spend your days. Are you more productive on certain days of the week or at certain times of day? Do you tend to work longer hours on some days than others? By analyzing weekly and intraday patterns in time tracking data, we can gain insights into our habits and make changes to improve our productivity.
+
+### Weekly {.tabset}
+<img src="/Users/berg/DataspellProjects/MDSA-UofC/DATA605/10_project/main_files/figure-html/by-weekday.png"/>
+
+### Hourly {.tabset}
+<img src="/Users/berg/DataspellProjects/MDSA-UofC/DATA605/10_project/animation.gif"/>
+
+## {-}
+Nothing too surprising there. Slow Mondays are followed by a productive Tuesday, and then trying to survive until weekends. As I'm a night owl, my productive peaks are in the afternoon, and my least productive hours are in the morning. I'm not sure if I should be proud of that or not. But I'm definitely going to try to change it.
+
+## Are you a productivity machine? Or the Productivity Rollercoaster {.tabset}
+Ah, the joys of being human. As much as we like to think we're productivity machines, the truth is that our output is far from consistent. To get a better sense of how my productivity fluctuated over time, I decided to create two calendar heatmaps: one to show my total time spent on my computer and another to show my productivity score (calculated as the fraction of productive and very productive time combined) over time. Looking at these heatmaps partitioned by year, I feel a little nostalgic (the melodramatic musing is playing).
+
+
+
+> Looking at these heatmaps partitioned by year, I feel a little nostalgic.
+
+
+
+### Total time
+<img src="/Users/berg/DataspellProjects/MDSA-UofC/DATA605/10_project/main_files/figure-html/heatmap-total-time.png"/>
+
+### Productivity score
+<img src="/Users/berg/DataspellProjects/MDSA-UofC/DATA605/10_project/main_files/figure-html/heatmap-productivity-frac.png"/>
+
+## {-}
+*In May 2018*, I had just closed <font color="#0D58C1"> a project that had lasted for a few years </font>, so the time from the beginning of 2018 until May of that year was highly productive. After that, I decided to take some time off to plan my wedding and prepare for the big day by <font color="#D41C15"> visiting wedding websites and going through a flurry of organizing activities </font> (you know how it is).
+
+*Spring of 2019* brought <font color="#0D58C1"> a new job </font> at a company, and in
+
+*September of 2020*, I changed positions to focus more on <font color="#0D58C1"> the technological aspects </font>(data science, here I come!) - dark blue squares everywhere.
+
+*The end of 2020 and beginning of 2021* my partner and I indulged in watching all the Christmas <font color="#D41C15"> movies </font> available (yes, all of them, including with imdb rate score below 5). After that, I became somewhat productive <font color="#0D58C1"> trading crypto </font> and babysitting (don't ask me how that worked), so I didn't have to work much throughout *the summer of 2021*.
+
+*In February 2022*, the war happened, so I came back to my laptop to start <font color="#0D58C1"> the University of Calgary program </font>, resulting in a lot of dark blue and dark green squares. As you can see, our productivity ebbs and flows, and sometimes life just gets in the way.
+
+## From Sunrise to Sunset: The Battle Between Mobile and Desktop Productivity
+<img src="/Users/berg/DataspellProjects/MDSA-UofC/DATA605/10_project/main_files/figure-html/mobile-vs-pc.png"/>
+
+I mean, who wakes up and checks their laptop before even getting out of bed? But with mobile phones being constantly by our side, I guess it's not so surprising after all. And don't even get me started on the addiction to social media scrolling... It was quite revealing to see how much time I spend on my phone doing "quick checks" that turn into hours of mindless browsing. I was actually proud to see that I spend less time on my computer during weekends, but then I realized that I'm just glued to my phone screen instead. Oh well, at least I'm aware of it now!
+
+::: {.infobox .caution data-latex="{caution}"}
+**NOTE**
+
+I was actually proud to see that I spend less time on my computer during weekends, but then I realized that I'm just glued to my phone screen instead.
+::::
+
+## Conclusion
+
+### Pros
+-   Data about computer and mobile device usage are continously tracked.
+-   All data is (freely) accessible without need for Premium subscription.
+-   You can install the RescueTime app on multiple computers as well as your mobile phone(s) or tablet(s).
+-   You can automate your data collection using the (well-documented) RescueTime API.
+-   You can analyze and visualize various activity and productivity metrics, and generate reports, on your RescueTime account.
+
+### Cons
+- iOS Devices are not trackable to full extent due to restrictive Apple policy.
+-   For accurate use of the automatically assigned productivity metrics, a manual check or adjustment is needed.
+-   Without the Premium account the RescueTime API only allows access to data from the last 3 months.
+
+## References
+- [RescueTime](https://www.rescuetime.com/)
+- [RescueTime API](https://www.rescuetime.com/anapi/setup/documentation)
+- [Animation with gganimate library](https://www.datanovia.com/en/blog/gganimate-how-to-create-plots-with-beautiful-animation-in-r/)
+- [d3 in R with r2d3 library](https://rstudio.github.io/r2d3/articles/gallery.html)
+- [Functional programming in R, walk() function](https://dcl-prog.stanford.edu/index.html)
+- [Simple icons](https://icons8.com/)
+- [Put content in tabs](https://bookdown.org/yihui/rmarkdown-cookbook/html-tabs.html)
+- [Custom blocks](https://bookdown.org/yihui/rmarkdown-cookbook/custom-blocks.html)
+
+
+%%
+## Script for the video recording
+
+Hi everyone! In this data story, I'll be talking about my productivity habits and how I tracked them using RescueTime. I installed this app on my computer 10 years ago. But consistently I only used it for five years. Still I have a lot of data to analyze and visualize.
+To collect the data I used the RescueTime API. You can download only the last three months of data for free. But if you have a premium account, you can download all the data. I haven't had the premium account, so I invested a small amount of monthly subscription to get 650 000 row dataset.
+
+This diagram is a sketch of what I had to go through and used to create this data story. Majority of time I spent wrangling this dataset in R after cleaning it in Tableau Prep. As my R skills are not that advanced, I had to use a lot of trial and error to get the results I wanted. In addition to that, I used different r-markdown tricks, plus CSS and HTML to style this page. I know I won't get any awards for the design, but I'm happy with the result as I learnt a lot of new things.
+
+First of all, I am exploring how RescueTime is categorizing my activities and how much time on average I spent in each of them. It's worth mentioning that withing the Category the productivity may differ. That's why you see the combination of differently colored slices withing each donut. Sometimes they are solid because all activities within that category are considered of same productivity level, such as Software Development, or Entertainment.
+
+Secondly, I explored different rhythms or patterns during the week or during the day. The weekly bar plot is kind of self-explanatory. I decided to use the animation for the hourly chart. This way you can feel the rythm of the day as this plot is more dynamic.
+
+Then, I visualized the  Total amount of time spent each day over the last five years. The same type of visual I used to show my productivity score. Here, I define my productivity score as the ratio of the total amount of time spent on productive activities to the total amount of time spent on all activities. Probably this chart looks random to you but for me it totally makes sense, as I had a lot of changes in my life during this period. I had a new job, I got married, I had a baby, I changed my job, covid, war, I started a new program, and so on. So, I think it's a good approximation of my recent life.
+
+Finally, I wanted to show the difference between my computer and mobile device usage. Unfortunately, I have limited amount of data for my mobile device, as RescueTime doesn't track all the activities on iOS devices. And the app should alway be running in the background to track the activities. But I still have two months of consistent data.
+
+I wrap up this data story by listing the pros and cons of using RescueTime. I think it's a great tool to track your productivity. But it's not perfect. I hope you enjoyed this data story and learned something new. Thank you for your attention!
+
+## Survey
+
+### What were the main things you learned during the Data Story Case Study assignment?
+I learnt how to connect the dots while doing my data story. I had to use different tools and techniques to get the results I wanted. I used R for wrangling and visualization, Tableau Prep for cleaning, CSS and HTML for some styling, GitHub for version control. As these are the tools, the main thing I learned is how to use simple solutions to tell the insights in the most effective way. Nowadays, we have so many fancy charts, that its hard to resist the temptation to use them. But I think it's important to keep it simple and use the right tool for the right job.
+
+### How (if at all) did your values impact the analysis you performed and the story/visuals you created for the Final Project?
+One of my values is to give another perspective to the problem with the visualization. While I was visualizing my personal data, I was able to materialize my memories with some visuals.
+
+### What do you think are the most important values and practices for data scientists to consider when doing analysis and visualization work?
+
+%%
