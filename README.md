@@ -9,4 +9,4 @@ List of courses:
 - [DATA605 - Actionable Visualization and Analytics](DATA605/README.md)
 - [DATA606 - Statistical Methods in Data Science](DATA606/README.md)
 - [DATA607 - Machine Learning](DATA607/README.md)
-- [DATA606 - Developing Big Data Applications](DATA608/README.md)
+- [DATA608 - Developing Big Data Applications](DATA608/README.md)
