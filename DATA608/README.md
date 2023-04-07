@@ -8,7 +8,7 @@ Provides advanced coverage of tools and techniques for big data management and f
 - Threads and Pools;
 
 
-[Assignment 2](Assignment-2.pdf): 
+[Assignment 2](02_assignment/Assignment-2.pdf): 
 - Jupyter docker stacks;
 - Running docker containers;
 
