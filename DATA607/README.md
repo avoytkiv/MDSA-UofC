@@ -15,7 +15,7 @@ Advancement of the linear statistical model including introduction to data trans
 - Kernel Classification;
 - Grid Search.
 
-[Assignment 2](assignments/Assignment-3.ipynb): 
+[Assignment 3](assignments/Assignment-3.ipynb): 
 - Regularizing the linear model;
 - Feature engineering for Time Series forecating;
 - Neural network for classification.
