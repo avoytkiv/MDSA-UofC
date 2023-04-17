@@ -1,5 +1,7 @@
 # DATA601-SP500-exploratory-analysis
 
+[Notebook plus code](project.ipynb)
+
 The **guiding questions** that will be addressed in this investigation are:
 
 1. _How S&P 500 is structured, what are the components, and how is the final price calculated? What sectors and industries are there? Who are the leaders in each one of them?_
