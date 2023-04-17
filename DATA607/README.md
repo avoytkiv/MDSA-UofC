@@ -10,5 +10,15 @@ Advancement of the linear statistical model including introduction to data trans
 - SVM;
 - Comparing models.
 
+[Assignment 2](assignments/Assignment-2.ipynb): 
+- Gaussian Bayes Classifier;
+- Kernel Classification;
+- Grid Search.
+
+[Assignment 3](assignments/Assignment-3.ipynb): 
+- Regularizing the linear model;
+- Feature engineering for Time Series forecating;
+- Neural network for classification.
+
   
 [Project]()
